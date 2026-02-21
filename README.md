@@ -1,6 +1,6 @@
 # AneDet
 
-A web application for our Capstone Project that uses CNN and XGBoost hybrid models for detection of Anemia through hemoglobin prediction.
+A web application for our Capstone Project that uses CNN and XGBoost hybrid models for detection of Anemia through hemoglobin prediction using fingernail image.
 
 ### Prerequisites
 
