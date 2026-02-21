@@ -4,8 +4,12 @@ A web application for our Capstone Project that uses CNN and XGBoost hybrid mode
 
 ### Prerequisites
 
-- Node.js 18.17 or newer
-- npm (bundled with Node.js)
+#### Software Requirements
+- Python 3.8 or higher
+- Pip (Python package installer)
+
+#### Hardware Requirements
+- Webcam for using the live image capture feature
 
 ### Installation
 ### Clone repository
