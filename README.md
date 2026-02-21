@@ -12,7 +12,7 @@ A web application for our Capstone Project that uses CNN and XGBoost hybrid mode
 - Webcam (or any camera module that supports the default system camera index) for using the live image capture feature
 
 ### Installation
-### Clone repository
+### Clone this repository
 ```bash
 git clone https://github.com/adobong-sunog/AneDet.git
 ```
@@ -21,7 +21,7 @@ git clone https://github.com/adobong-sunog/AneDet.git
 pip install flask opencv-python numpy tensorflow xgboost
 ```
 
-### Run the development server
+### Run the server
 ```bash
 python app.py
 ```
