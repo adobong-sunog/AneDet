@@ -9,7 +9,7 @@ A web application for our Capstone Project that uses CNN and XGBoost hybrid mode
 - Pip (Python package installer)
 
 #### Hardware Requirements
-- Webcam for using the live image capture feature
+- Webcam (or any camera module that supports the default system camera index) for using the live image capture feature
 
 ### Installation
 ### Clone repository
