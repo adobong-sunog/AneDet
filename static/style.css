@@ -1,0 +1,26 @@
+/*Padding for main container*/
+body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #f4f7f6; padding: 0.5cm 0.8cm; box-sizing: border-box; margin: 0; height: 100vh; overflow: hidden; }
+.container { background: white; max-width: 650px; width: 100%; height: 100%; margin: 0 auto; padding: 10px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+h1 { color: #2c3e50; margin: 0; font-size: 1.2em; }
+p { margin: 2px 0; font-size: 0.8em; }
+
+/*Video container*/
+.video-box { border: 2px solid #34495e; border-radius: 5px; overflow: hidden; margin: 5px 0; background: #000; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
+img { max-height: 100%; max-width: 100%; display: block; object-fit: contain; }
+
+/*Upload container*/
+.upload-section { padding: 5px; border: 1px dashed #bdc3c7; border-radius: 5px; background: #fafafa; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.upload-section p { margin: 0; font-size: 0.8em; }
+.upload-btn { background: #3498db; color: white; padding: 5px 15px; border: none; border-radius: 3px; cursor: pointer; font-size: 0.9em; margin: 0; }
+.upload-btn:hover { background: #2980b9; }
+
+/*Results container*/
+.result-card { padding: 8px; border-radius: 10px; background: #ecf0f1; display: flex; align-items: center; justify-content: space-around; }
+.result-card > div:first-child { font-size: 0.8em; font-weight: bold; }
+.value { font-size: 1.8em; font-weight: 800; color: #2c3e50; }
+.unit { font-size: 0.9em; color: #7f8c8d; }
+.status-badge { font-size: 0.9em; font-weight: bold; padding: 4px 12px; border-radius: 15px; color: white; display: inline-block; }
+
+.normal { background: #27ae60; }
+.mild { background: #f39c12; }
+.severe { background: #c0392b; }
