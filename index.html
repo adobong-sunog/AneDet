@@ -915,23 +915,28 @@
     }
     
     .back-to-home-btn {
-      display: inline-flex;
+      display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 8px;
-      padding: 10px 18px;
+      width: 100%;
+      box-sizing: border-box;
+      gap: 10px;
+      padding: 16px 24px;
       background: var(--primary-light);
       color: var(--primary);
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
+      border: 1px solid rgba(79, 70, 229, 0.2);
+      border-radius: 12px;
+      font-weight: 700;
       cursor: pointer;
       margin-bottom: 30px;
-      transition: background 0.2s, transform 0.1s;
-      font-size: 10.5pt;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      font-size: 11.5pt;
+      box-shadow: 0 4px 6px rgba(79, 70, 229, 0.05);
     }
     .back-to-home-btn:hover {
       background: #c7d2fe;
-      transform: translateX(-2px);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(79, 70, 229, 0.1);
     }
 
     /* Mobile Responsive Hooks */
@@ -950,6 +955,12 @@
         grid-template-columns: 1fr; /* Force single column on phones */
         gap: 16px;
         margin-top: 20px;
+      }
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
       }
       h1 {
         font-size: 24pt;
@@ -1011,8 +1022,7 @@
 <body>
 
   <h1>AneDet System Walkthrough</h1>
-  <p class="subtitle">A complete guide to how the non-invasive anemia detection system works from camera capture
-    to hemoglobin prediction on the screen.</p>
+  <p class="subtitle">A complete guide to how the non-invasive anemia detection system works.</p>
 
   <!-- ═══════════════════════════════════════════════════════════════════ -->
   <h2>System in Simple Terms</h2>
@@ -2475,11 +2485,13 @@ autofocus: Continuous + Fast (Camera Module 3)
     </div>
   </div>
 
-  <hr>
-  <p style="text-align: center; color: var(--text-secondary); font-size: 9pt; margin-top: 30px;">
-    AneDet System Walkthrough &copy; Developed 2026<br>
-    Caparas &bull; Dionisio &bull; Salvacion &bull; Sulit
-  </p>
+  <footer id="app-footer">
+    <hr>
+    <p style="text-align: center; color: var(--text-secondary); font-size: 9pt; margin-top: 30px;">
+      AneDet System Walkthrough &copy; Developed 2026<br>
+      Caparas &bull; Dionisio &bull; Salvacion &bull; Sulit
+    </p>
+  </footer>
 
   <!-- Floating TOC Button and Modal -->
   <button id="tocBtn" title="Table of Contents">☰</button>
@@ -2527,9 +2539,9 @@ autofocus: Continuous + Fast (Camera Module 3)
           sections.push({ ...currentSection, card });
           
           currentSection.div.appendChild(el);
-        } else if (currentSection && el.tagName !== 'SCRIPT' && el.id !== 'tocBtn' && el.id !== 'tocModal') {
+        } else if (currentSection && el.tagName !== 'SCRIPT' && el.id !== 'tocBtn' && el.id !== 'tocModal' && el.id !== 'app-footer') {
           currentSection.div.appendChild(el);
-        } else if (!currentSection && el.tagName !== 'SCRIPT') {
+        } else if (!currentSection && el.tagName !== 'SCRIPT' && el.id !== 'app-footer') {
           // Remove orphan elements before the first H2 (like the old static TOC block)
           el.remove();
         }
@@ -2540,6 +2552,11 @@ autofocus: Continuous + Fast (Camera Module 3)
       }
       
       subtitle.after(homepage);
+      
+      const appFooter = document.getElementById('app-footer');
+      if (appFooter) {
+        body.appendChild(appFooter);
+      }
 
       // 2. Interactive Navigation State
       const btn = document.getElementById("tocBtn");
@@ -2572,7 +2589,7 @@ autofocus: Continuous + Fast (Camera Module 3)
           const backLink = document.createElement("a");
           backLink.href = "#";
           backLink.className = "toc-item";
-          backLink.innerHTML = "🏠 <strong>Return to Homepage</strong>";
+          backLink.innerHTML = "<strong>Return to Homepage</strong>";
           backLink.style.marginBottom = "15px";
           backLink.style.borderBottom = "1px solid var(--border)";
           backLink.style.paddingBottom = "15px";
@@ -2652,6 +2669,18 @@ autofocus: Continuous + Fast (Camera Module 3)
 
       // Default Initialization
       openHomepage();
+
+      // Wire up the legacy static TOC inside the first section
+      const staticTocList = document.querySelector('.toc ol');
+      if (staticTocList) {
+        const listItems = staticTocList.querySelectorAll('li');
+        listItems.forEach((li, index) => {
+          li.style.cursor = "pointer";
+          li.addEventListener("click", () => {
+            openSection('section-' + index);
+          });
+        });
+      }
 
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
