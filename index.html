@@ -655,12 +655,6 @@
       box-shadow: var(--shadow-sm);
     }
     
-    @keyframes pulse-ring {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.6); }
-      70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(79, 70, 229, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
-    }
-
     /* TOC Floating Button & Modal */
     #tocBtn {
       position: fixed;
@@ -680,10 +674,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      animation: pulse-ring 3s infinite cubic-bezier(0.25, 0.8, 0.25, 1);
     }
     #tocBtn:hover {
-      animation: none;
       transform: scale(1.08) translateY(-2px);
       background: #4338ca;
     }
@@ -699,30 +691,32 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow-lg);
       border: 1px solid rgba(255,255,255,0.6);
-      padding: 24px 14px 24px 24px; /* Reduced right padding to fit scrollbar nicely */
+      padding: 24px 10px 24px 24px; /* Reduced right padding to fit wide scrollbar nicely */
       opacity: 0;
       pointer-events: none;
       transform: translateY(20px) scale(0.95);
       transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 999;
-      overflow-y: auto;
+      /* ALWAYS show scrollbar so it acts as a constant interactive guide */
+      overflow-y: scroll;
     }
     
     /* Scrollbar Guide for TOC Modal */
     #tocModal::-webkit-scrollbar {
-      width: 6px;
+      width: 10px; /* Wider scrollbar to be easily clickable */
     }
     #tocModal::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.03); 
+      background: rgba(0, 0, 0, 0.05); /* Darker track so the boundary is visible */
       border-radius: 10px;
       margin: 10px 0;
     }
     #tocModal::-webkit-scrollbar-thumb {
-      background: rgba(79, 70, 229, 0.3); 
+      background: rgba(79, 70, 229, 0.5); /* Much more visible thumb color */
       border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.92); /* Padding effect inside the track */
     }
     #tocModal::-webkit-scrollbar-thumb:hover {
-      background: rgba(79, 70, 229, 0.6); 
+      background: rgba(79, 70, 229, 0.8); 
     }
     #tocModal.show {
       opacity: 1;
