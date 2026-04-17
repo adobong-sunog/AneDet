@@ -954,6 +954,61 @@
       box-shadow: 0 6px 12px rgba(79, 70, 229, 0.1);
     }
     
+    /* Section Pagination Bottom Bar */
+    .section-pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(79,70,229,0.15);
+      gap: 20px;
+    }
+    
+    .pagination-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 24px;
+      background: rgba(255, 255, 255, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      box-shadow: inset 0 1px 1px var(--glass-gloss);
+      backdrop-filter: blur(12px);
+      text-align: left;
+    }
+    .pagination-btn:hover {
+      background: rgba(255, 255, 255, 0.75);
+      border-color: rgba(79, 70, 229, 0.4);
+      transform: translateY(-3px);
+      box-shadow: inset 0 1px 1px var(--glass-gloss), 0 8px 16px rgba(79,70,229,0.08);
+    }
+    .pagination-btn.next {
+      align-items: flex-end;
+      text-align: right;
+    }
+    .pagination-label {
+      font-size: 10pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .pagination-title {
+      font-size: 12pt;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
     /* Desktop default: hide the mobile swipe hint */
     .table-swipe-hint {
       display: none;
@@ -1003,6 +1058,15 @@
       }
       td code {
         white-space: nowrap; /* Keeps technical paths on a single line */
+      }
+      .section-pagination {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .pagination-btn {
+        width: 100%;
+        align-items: center !important;
+        text-align: center !important;
       }
       h1 {
         font-size: 24pt;
@@ -2698,8 +2762,8 @@ autofocus: Continuous + Fast (Camera Module 3)
         renderModal(true);
       }
 
-      // Attach clicks to Homepage Cards and generate Back buttons for each section
-      sections.forEach(sec => {
+      // Attach clicks to Homepage Cards, generate Back buttons, and add Bottom Pagination
+      sections.forEach((sec, index) => {
         sec.card.addEventListener("click", () => openSection(sec.id));
         
         const backBtn = document.createElement("button");
@@ -2707,6 +2771,34 @@ autofocus: Continuous + Fast (Camera Module 3)
         backBtn.innerHTML = "← Back to Homepage";
         backBtn.addEventListener("click", openHomepage);
         sec.div.insertBefore(backBtn, sec.div.firstChild);
+
+        // Build bottom pagination bar
+        const pagination = document.createElement("div");
+        pagination.className = "section-pagination";
+
+        const prevBtn = document.createElement("button");
+        prevBtn.className = "pagination-btn prev";
+        if (index > 0) {
+          prevBtn.innerHTML = `<div class="pagination-label">« Previous Section</div><div class="pagination-title">${sections[index - 1].title}</div>`;
+          prevBtn.addEventListener("click", () => openSection(sections[index - 1].id));
+        } else {
+          prevBtn.innerHTML = `<div class="pagination-label">« Return Focus</div><div class="pagination-title">Homepage Grid</div>`;
+          prevBtn.addEventListener("click", openHomepage);
+        }
+        pagination.appendChild(prevBtn);
+
+        const nextBtn = document.createElement("button");
+        nextBtn.className = "pagination-btn next";
+        if (index < sections.length - 1) {
+          nextBtn.innerHTML = `<div class="pagination-label">Next Section »</div><div class="pagination-title">${sections[index + 1].title}</div>`;
+          nextBtn.addEventListener("click", () => openSection(sections[index + 1].id));
+        } else {
+          nextBtn.innerHTML = `<div class="pagination-label">Finish Walkthrough</div><div class="pagination-title">Return to Homepage</div>`;
+          nextBtn.addEventListener("click", openHomepage);
+        }
+        pagination.appendChild(nextBtn);
+
+        sec.div.appendChild(pagination);
       });
 
       // Default Initialization
@@ -2721,7 +2813,7 @@ autofocus: Continuous + Fast (Camera Module 3)
 
         const hint = document.createElement('div');
         hint.className = 'table-swipe-hint';
-        hint.innerHTML = 'Swipe table to view columns';
+        hint.innerHTML = 'Swipe table to view extra columns (if any)';
         wrapper.parentNode.insertBefore(hint, wrapper);
       });
 
