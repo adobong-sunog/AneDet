@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anemia Screening System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header-group">
+            <h1>AneDet</h1>
+            <p>Non-invasive Anemia Detector</p>
+        </div>
+
+        <div class="control-row">
+            <div class="control-group">
+                <button id="startBtn" class="capture-btn start">Start Reading</button>
+                <button id="stopBtn" class="capture-btn stop">Stop</button>
+<<<<<<< HEAD
+=======
+            </div>
+            <button id="refreshBtn" class="refresh-btn" title="Refresh">Refresh</button>
+            <button id="adminBtn" class="admin-btn" title="More options">More</button>
+        </div>
+        <div id="phase_text" class="phase-text">Press Start to begin camera preview</div>
+
+        <div class="video-box">
+            <img id="videoStream" src="" style="display:none;" onerror="this.style.display='none'; document.getElementById('cam-error').style.display='block'">
+            <div id="cam-error" style="display:block; color:white; padding:40px;">Camera ready, waiting for confirmation to start.</div>
+        </div>
+
+        <div class="result-card">
+            <div>Hemoglobin Level</div>
+            <div class="value-container">
+                <span class="value" id="hb_val">--</span>
+                <span class="unit">g/dL</span>
+>>>>>>> a2e288f106bbc0ca2d7d6dbd75fdf89172035065
+            </div>
+            <button id="refreshBtn" class="refresh-btn" title="Refresh">Refresh</button>
+            <button id="adminBtn" class="admin-btn" title="More options">More</button>
+        </div>
+        <div id="phase_text" class="phase-text">Press Start to begin camera preview</div>
+        <div id="qualityPanel" class="quality-panel">
+            <div class="quality-header">
+                <span>Placement Quality</span>
+                <span id="qualityScoreText">0%</span>
+            </div>
+            <div class="quality-bar-track">
+                <div id="qualityBarFill" class="quality-bar-fill" style="width:0%;"></div>
+            </div>
+            <div id="qualityTipText" class="quality-tip">Place index fingernail in the center guide area.</div>
+        </div>
+        <div class="reading-layout">
+            <div class="video-box">
+                <img id="videoStream" src="" style="display:none;" onerror="this.style.display='none'; document.getElementById('cam-error').style.display='block'">
+                <div id="cam-error" style="display:block; color:white; padding:40px;">Camera ready, waiting for confirmation to start.</div>
+            </div>
+
+            <aside class="reading-side">
+                <div class="result-card side-result-card center-align">
+                    <div id="status_badge" class="status-badge large-badge normal" style="opacity: 0;">Ready</div>
+                    <div class="val-group">
+                        <div class="result-title small-title">Estimated Hemoglobin Level</div>
+                        <div class="value-container small-value">
+                            <span class="value" id="hb_val">--</span>
+                            <span class="unit">g/dL</span>
+                        </div>
+                    </div>
+                    <div class="result-actions">
+                        <button id="saveReadingBtn" class="capture-btn start compact" style="display:none;">Save Reading Data</button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <div id="adminModal" class="modal-overlay" style="display:none;">
+        <div class="modal-card admin-card">
+            <h3>Admin Menu</h3>
+<<<<<<< HEAD
+            <div id="adminStatus" class="admin-status" aria-live="polite">Idle</div>
+            <div id="adminActionPanel">
+                <div class="modal-actions admin-actions">
+                    <button id="projectDetailsBtn" class="admin-btn">Project Details</button>
+                    <button id="exportRecordsBtn" class="capture-btn start">Get Records From Database</button>
+                    <button id="resetDatabaseBtn" class="capture-btn stop">Reset Database</button>
+                    <button id="adminExitBtn" class="capture-btn stop">Exit To Desktop</button>
+                </div>
+                <div class="modal-actions">
+                    <button id="closeAdminBtn" class="capture-btn stop">Close</button>
+                </div>
+            </div>
+            <div id="adminAuthPanel" class="admin-auth-panel" style="display:none;">
+                <label for="adminPassword" class="admin-label">Enter password to continue</label>
+                <input id="adminPassword" class="admin-password vk-input" type="password" autocomplete="off" placeholder="Password">
+                <div class="modal-actions admin-auth-actions">
+                    <button id="adminAuthConfirmBtn" class="capture-btn start" type="button">Confirm</button>
+                    <button id="adminAuthCancelBtn" class="capture-btn stop" type="button">Cancel</button>
+                </div>
+=======
+            <p class="modal-subtitle">Authorized actions only.</p>
+            <label for="adminPassword" class="admin-label">Enter password to allow exit</label>
+            <input id="adminPassword" class="admin-password" type="password" autocomplete="off" placeholder="Password">
+            <div id="adminStatus" class="admin-status" aria-live="polite">Idle</div>
+            <div class="modal-actions admin-actions">
+                <button id="projectDetailsBtn" class="admin-btn">Project Details</button>
+                <button id="adminExitBtn" class="capture-btn stop">Exit To Desktop</button>
+            </div>
+            <div class="modal-actions">
+                <button id="closeAdminBtn" class="capture-btn stop">Close</button>
+>>>>>>> a2e288f106bbc0ca2d7d6dbd75fdf89172035065
+            </div>
+        </div>
+    </div>
+
+    <div id="projectModal" class="modal-overlay" style="display:none;">
+        <div class="modal-card project-card">
+            <h3>AneDet</h3>
+            <p class="modal-subtitle">Project Members</p>
+            <ul class="member-list">
+                <li>Caparas, Miguel Angelo</li>
+                <li>Dionisio, Ianara Nicole</li>
+                <li>Salvacion, Daniel Paris</li>
+                <li>Sulit, Karl Isaiah</li>
+            </ul>
+            <div class="modal-actions">
+                <button id="closeProjectBtn" class="capture-btn stop">Close</button>
+            </div>
+        </div>
+    </div>
+
+<<<<<<< HEAD
+    <div id="saveReadingModal" class="modal-overlay" style="display:none;">
+        <div class="modal-card save-reading-card">
+            <h3>Save Reading Data</h3>
+            <p class="modal-subtitle">This data will be used as logs and can help in improving the prediction results.</p>
+            <p class="privacy-note">
+                Data entered here is handled in compliance with the Philippine Data Privacy Act of 2012 (Republic Act No. 10173).
+            </p>
+
+            <form id="saveReadingForm" class="save-reading-form" enctype="multipart/form-data">
+                <label for="patientName">Name (optional)</label>
+                <input id="patientName" name="name" class="admin-password vk-input" type="text" maxlength="120" autocomplete="off" placeholder="Patient name">
+
+                <label for="measurementTime">Time of Measurement Taken</label>
+                <input id="measurementTime" class="admin-password" type="text" readonly>
+
+                <label for="predictedHb">Hemoglobin Level Prediction</label>
+                <input id="predictedHb" name="predicted_hb" class="admin-password" type="text" readonly>
+
+                <label for="predictedStatus">Prediction Status</label>
+                <input id="predictedStatus" name="predicted_status" class="admin-password" type="text" readonly>
+
+                <div id="saveFormStatus" class="admin-status" aria-live="polite">Fill the form, then tap Submit.</div>
+
+                <div class="modal-actions">
+                    <button type="submit" id="submitSaveReadingBtn" class="capture-btn start">Submit</button>
+                    <button type="button" id="cancelSaveReadingBtn" class="capture-btn stop">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="keyboardDock" class="keyboard-dock" style="display:none;">
+        <div id="virtualKeyboard" class="virtual-keyboard"></div>
+    </div>
+
+=======
+>>>>>>> a2e288f106bbc0ca2d7d6dbd75fdf89172035065
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

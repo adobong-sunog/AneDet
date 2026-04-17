@@ -1,0 +1,54 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Build and packaging artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Test and analysis caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Environment and local config
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Editor and OS artifacts
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Project runtime outputs and local secrets
+data/readings.db
+data/*.db
+data/*.key
+databaseRecords/*.csv
+
+# Common ML training output directory
+runs/
+
+# Optional: uncomment if you do not want to version model artifacts
+*.pt
+*.onnx
+
+pi_inference.py
