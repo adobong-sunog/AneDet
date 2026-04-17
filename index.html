@@ -2549,44 +2549,44 @@ autofocus: Continuous + Fast (Camera Module 3)
   <h3>Complete System Data Flow (End to End)</h3>
 
   <div class="flow">
-    <div class="flow-node start">&#128247; Camera Module 3 (640&times;480)</div>
+    <div class="flow-node start">Camera Module 3 (640&times;480)</div>
     <div class="flow-arrow"><span class="label">raw frame</span></div>
-    <div class="flow-node">&#128270; <strong>YOLO Nail Detector</strong> (best.pt, 416px)</div>
+    <div class="flow-node"><strong>YOLO Nail Detector</strong> (best.pt, 416px)</div>
     <div class="flow-arrow"><span class="label">nail bounding box</span></div>
-    <div class="flow-node">&#9986; Crop <strong>Nail</strong> (224&times;224) + <strong>Skin Patch</strong>
+    <div class="flow-node">Crop <strong>Nail</strong> (224&times;224) + <strong>Skin Patch</strong>
       (96&times;96)</div>
     <div class="flow-arrow"></div>
     <div class="flow-branch">
       <div class="flow-branch-col">
-        <div class="flow-branch-label">&#127912; Image</div>
+        <div class="flow-branch-label">Image</div>
         <div class="flow-node narrow">Resize, RGB,<br>ImageNet Normalize</div>
       </div>
       <div class="flow-branch-divider"></div>
       <div class="flow-branch-col">
-        <div class="flow-branch-label">&#129514; Colour</div>
+        <div class="flow-branch-label">Colour</div>
         <div class="flow-node narrow">Lab means &rarr; 6 values<br>z-normalise</div>
       </div>
     </div>
     <div class="flow-arrow"></div>
-    <div class="flow-node accent">&#128260; <strong>TTA &times; 5</strong> shifted crops</div>
+    <div class="flow-node accent"><strong>TTA &times; 5</strong> shifted crops</div>
     <div class="flow-arrow"><span class="label">5 predictions &rarr; median</span></div>
-    <div class="flow-node">&#10135; &divide; 10 &rarr; g/dL + <strong>Slope Correction</strong></div>
+    <div class="flow-node">&divide; 10 &rarr; g/dL + <strong>Slope Correction</strong></div>
     <div class="flow-arrow"></div>
     <div class="flow-node">&lsim; EMA Smoothing + History Buffer</div>
     <div class="flow-arrow"><span class="label">session samples</span></div>
-    <div class="flow-node accent">&#128200; <strong>Session Aggregation</strong><br><small>IQR filter &rarr; Median
+    <div class="flow-node accent"><strong>Session Aggregation</strong><br><small>IQR filter &rarr; Median
         &rarr; Anemia Guard</small></div>
     <div class="flow-arrow"><span class="label">final Hb</span></div>
-    <div class="flow-node green">&#127991; <strong>Classification</strong><br><small>Normal / Borderline / Mild /
+    <div class="flow-node green"><strong>Classification</strong><br><small>Normal / Borderline / Mild /
         Moderate / Severe</small></div>
     <div class="flow-arrow"></div>
     <div class="flow-branch">
       <div class="flow-branch-col">
-        <div class="flow-node narrow green">&#128241; 5-inch Display</div>
+        <div class="flow-node narrow green">5-inch Display</div>
       </div>
       <div class="flow-branch-divider"></div>
       <div class="flow-branch-col">
-        <div class="flow-node narrow">&#128274; SQLite DB<br><small>(encrypted names)</small></div>
+        <div class="flow-node narrow">SQLite DB<br><small>(encrypted names)</small></div>
       </div>
     </div>
   </div>
