@@ -1,0 +1,2362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AneDet System Walkthrough</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #eef2ff;
+      --accent: #f59e0b;
+      --green: #10b981;
+      --red: #ef4444;
+      --text: #111827;
+      --text-secondary: #4b5563;
+      --border: #e5e7eb;
+      --bg: #f3f4f6;
+      --bg-code: #ffffff;
+      --bg-note: #e0e7ff;
+      --bg-tip: #d1fae5;
+      --bg-important: #fef3c7;
+      --bg-caution: #fee2e2;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 11.5pt;
+      line-height: 1.8;
+      color: var(--text);
+      background: #ffffff;
+      max-width: 920px;
+      margin: 40px auto;
+      padding: 60px 80px;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    @media print {
+      body {
+        padding: 20px 30px;
+        font-size: 10pt;
+        max-width: none;
+      }
+
+      .page-break {
+        page-break-before: always;
+      }
+
+      h2 {
+        page-break-after: avoid;
+      }
+
+      table,
+      pre,
+      .callout {
+        page-break-inside: avoid;
+      }
+    }
+
+    h1 {
+      font-size: 32pt;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--primary), #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      padding-bottom: 4px;
+      border-bottom: none;
+    }
+
+    h1+p.subtitle {
+      font-size: 13pt;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      font-weight: 500;
+      line-height: 1.6;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 18pt;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 48px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    h2::before {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 22px;
+      background: var(--primary);
+      border-radius: 4px;
+    }
+
+    h3 {
+      font-size: 14pt;
+      font-weight: 600;
+      color: var(--text);
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+
+    h4 {
+      font-size: 11.5pt;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-top: 18px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    ul,
+    ol {
+      margin-bottom: 10px;
+      padding-left: 24px;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      font-size: 9.5pt;
+      background: var(--bg-code);
+      padding: 2px 5px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+    }
+
+    pre {
+      font-family: 'Fira Code', monospace;
+      font-size: 9pt;
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      overflow-x: auto;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-bottom: 24px;
+      font-size: 10.5pt;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    th {
+      background: #f8fafc;
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      font-size: 9pt;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #f8fafc;
+    }
+
+    .callout {
+      border-radius: 12px;
+      padding: 18px 24px;
+      margin: 20px 0;
+      border-left: 5px solid;
+      font-size: 10.5pt;
+      line-height: 1.6;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 11pt;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .callout.note {
+      background: var(--bg-note);
+      border-color: var(--primary);
+    }
+
+    .callout.note .callout-title {
+      color: var(--primary);
+    }
+
+    .callout.tip {
+      background: var(--bg-tip);
+      border-color: var(--green);
+    }
+
+    .callout.tip .callout-title {
+      color: var(--green);
+    }
+
+    .callout.important {
+      background: var(--bg-important);
+      border-color: var(--accent);
+    }
+
+    .callout.important .callout-title {
+      color: #e37400;
+    }
+
+    .callout.caution {
+      background: var(--bg-caution);
+      border-color: var(--red);
+    }
+
+    .callout.caution .callout-title {
+      color: var(--red);
+    }
+
+    .diagram-box {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      margin: 14px 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 9pt;
+      line-height: 1.4;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    /* ── Flowchart Component System ─────────────────────────────── */
+    .flow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      margin: 18px 0;
+      padding: 20px 10px;
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .flow-node {
+      background: white;
+      border: 2px solid var(--primary);
+      border-radius: 10px;
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 9.5pt;
+      line-height: 1.45;
+      max-width: 340px;
+      width: 100%;
+      position: relative;
+    }
+
+    .flow-node strong {
+      color: var(--primary);
+    }
+
+    .flow-node.accent {
+      border-color: var(--accent);
+      background: var(--bg-important);
+    }
+
+    .flow-node.accent strong {
+      color: #e37400;
+    }
+
+    .flow-node.green {
+      border-color: var(--green);
+      background: var(--bg-tip);
+    }
+
+    .flow-node.green strong {
+      color: var(--green);
+    }
+
+    .flow-node.red {
+      border-color: var(--red);
+      background: var(--bg-caution);
+    }
+
+    .flow-node.red strong {
+      color: var(--red);
+    }
+
+    .flow-node.wide {
+      max-width: 420px;
+    }
+
+    .flow-node.narrow {
+      max-width: 260px;
+    }
+
+    .flow-node.start {
+      border-radius: 24px;
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+    }
+
+    .flow-node.start strong {
+      color: white;
+    }
+
+    .flow-node.decision {
+      border-radius: 4px;
+      transform: none;
+      border-color: var(--accent);
+      background: #fffbf0;
+      font-size: 9pt;
+    }
+
+    .flow-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--primary);
+      font-size: 9pt;
+      padding: 2px 0;
+    }
+
+    .flow-arrow::before {
+      content: '';
+      display: block;
+      width: 2px;
+      height: 16px;
+      background: var(--primary);
+    }
+
+    .flow-arrow::after {
+      content: '▼';
+      font-size: 10pt;
+      line-height: 1;
+      margin-top: -3px;
+    }
+
+    .flow-arrow .label {
+      font-size: 8.5pt;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    .flow-branch {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 14px;
+      align-items: start;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .flow-branch-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .flow-branch-label {
+      font-size: 9pt;
+      font-weight: 600;
+      color: var(--text-secondary);
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: white;
+      border: 1px solid var(--border);
+      margin-bottom: 4px;
+    }
+
+    .flow-branch-divider {
+      width: 1px;
+      background: var(--border);
+      min-height: 80px;
+      align-self: stretch;
+    }
+
+    .flow-connector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 8.5pt;
+      color: var(--text-secondary);
+    }
+
+    .flow-connector::before,
+    .flow-connector::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Hardware stack */
+    .hw-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      margin: 18px 0;
+      padding: 24px 16px;
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .hw-box {
+      background: white;
+      border: 2px solid var(--primary);
+      border-radius: 10px;
+      padding: 14px 24px;
+      text-align: center;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .hw-box .hw-title {
+      font-weight: 700;
+      font-size: 11pt;
+      color: var(--primary);
+    }
+
+    .hw-box .hw-desc {
+      font-size: 9pt;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .hw-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4px 0;
+    }
+
+    .hw-link::before {
+      content: '';
+      display: block;
+      width: 2px;
+      height: 18px;
+      background: var(--primary);
+    }
+
+    .hw-link-label {
+      font-size: 8pt;
+      color: var(--text-secondary);
+      padding: 2px 8px;
+      background: var(--bg-code);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .hw-link::after {
+      content: '▼';
+      display: block;
+      color: var(--primary);
+      font-size: 10pt;
+      line-height: 10px;
+      padding-top: 15px;
+      background: linear-gradient(var(--primary), var(--primary)) no-repeat center top / 2px 16px;
+      margin-top: 1px;
+      margin-bottom: -4px;
+    }
+
+    .toc {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 24px;
+      margin: 20px 0 30px 0;
+    }
+
+    .toc-title {
+      font-weight: 700;
+      font-size: 12pt;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .toc ol {
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    .toc li {
+      margin-bottom: 3px;
+      font-size: 10pt;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .flow-arrow {
+      color: var(--primary);
+      font-weight: 700;
+      margin-right: 8px;
+      flex-shrink: 0;
+      font-size: 14pt;
+      line-height: 1.4;
+    }
+
+    hr {
+      border: none;
+      border-top: 2px solid var(--border);
+      margin: 30px 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 9pt;
+      font-weight: 600;
+    }
+
+    .badge.normal {
+      background: #e6f4ea;
+      color: #1e8e3e;
+    }
+
+    .badge.mild {
+      background: #fef7e0;
+      color: #e37400;
+    }
+
+    .badge.moderate {
+      background: #fce8e6;
+      color: #d93025;
+    }
+
+    .badge.severe {
+      background: #d93025;
+      color: white;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    @media print {
+      .two-col {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .metric-card {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 16px;
+      text-align: center;
+    }
+
+    .metric-card .value {
+      font-size: 20pt;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .metric-card .label {
+      font-size: 9pt;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* Modern Enhancements */
+    .callout, pre, .diagram-box, .flow, .hw-stack, .metric-card, .toc, table {
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius);
+      background: #ffffff;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .callout:hover, pre:hover, .diagram-box:hover, .flow:hover, .hw-stack:hover, .metric-card:hover, .toc:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+    .hw-box, .flow-node {
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius);
+      border-width: 1.5px;
+    }
+    .badge {
+      box-shadow: var(--shadow-sm);
+    }
+    
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.6); }
+      70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(79, 70, 229, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+    }
+
+    /* TOC Floating Button & Modal */
+    #tocBtn {
+      position: fixed;
+      bottom: 50px;
+      right: 30px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 26px;
+      box-shadow: var(--shadow-lg);
+      cursor: pointer;
+      z-index: 1000;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse-ring 3s infinite cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    #tocBtn:hover {
+      animation: none;
+      transform: scale(1.08) translateY(-2px);
+      background: #4338ca;
+    }
+    #tocModal {
+      position: fixed;
+      bottom: 120px;
+      right: 30px;
+      width: 340px;
+      max-height: 70vh;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255,255,255,0.6);
+      padding: 24px 14px 24px 24px; /* Reduced right padding to fit scrollbar nicely */
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px) scale(0.95);
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 999;
+      overflow-y: auto;
+    }
+    
+    /* Scrollbar Guide for TOC Modal */
+    #tocModal::-webkit-scrollbar {
+      width: 6px;
+    }
+    #tocModal::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.03); 
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+    #tocModal::-webkit-scrollbar-thumb {
+      background: rgba(79, 70, 229, 0.3); 
+      border-radius: 10px;
+    }
+    #tocModal::-webkit-scrollbar-thumb:hover {
+      background: rgba(79, 70, 229, 0.6); 
+    }
+    #tocModal.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+    #tocModal h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 14pt;
+      color: var(--primary);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .toc-item {
+      display: block;
+      padding: 8px 12px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.2s, color 0.2s, padding-left 0.2s;
+      font-size: 10.5pt;
+      margin-bottom: 2px;
+    }
+    .toc-item:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+      padding-left: 16px;
+    }
+
+    /* Mobile Responsive Hooks */
+    @media (max-width: 768px) {
+      body {
+        padding: 24px 22px;
+        font-size: 13pt; /* Larger base font for readability */
+        line-height: 1.6;
+      }
+      h1 {
+        font-size: 24pt;
+        line-height: 1.2;
+      }
+      h2 {
+        font-size: 18pt;
+      }
+      h3 {
+        font-size: 15pt;
+      }
+      pre {
+        font-size: 10.5pt;
+        padding: 16px;
+      }
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+      .flow-branch {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .flow-branch-divider {
+        display: none;
+      }
+      .flow-node {
+        font-size: 11pt;
+      }
+      
+      /* Make Floating Button Larger for Touch */
+      #tocBtn {
+        width: 76px;
+        height: 76px;
+        font-size: 32px;
+        bottom: 50px;
+        right: 24px;
+      }
+      
+      /* Make Modal Wider and Links Larger */
+      #tocModal {
+        width: calc(100% - 48px);
+        bottom: 140px;
+        right: 24px;
+        max-height: 65vh;
+        padding: 24px 14px 24px 20px;
+      }
+      #tocModal h3 {
+        font-size: 18pt;
+      }
+      .toc-item {
+        font-size: 13pt;
+        padding: 14px 16px;
+        margin-bottom: 6px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>AneDet System Walkthrough</h1>
+  <p class="subtitle">A complete guide to how the non-invasive anemia detection system works from camera capture
+    to hemoglobin prediction on the screen.</p>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2>System in Simple Terms</h2>
+
+  <div class="callout note">
+    <div class="callout-title">&#9432; Note</div>
+    This section explains the entire system in simple terms. If you already understand machine learning in AI and
+    software, you can skip
+    ahead to Section 1.
+  </div>
+
+  <h3>What is Anemia?</h3>
+  <p>Anemia is a condition where your blood doesn&rsquo;t have enough <strong>hemoglobin</strong> (Hb) &mdash; the
+    protein in red blood cells that carries oxygen around your body. When hemoglobin is too low, you may feel tired,
+    weak, or dizzy.</p>
+  <p>Normally, to check for anemia, a nurse draws blood from your arm and sends it to a laboratory. This takes time,
+    costs money, and requires a needle. <strong>AneDet tries to do the same check without any needles or blood</strong>
+    &mdash; just by looking at your fingernail with a camera.</p>
+
+  <h3>How Can a Camera Detect Anemia?</h3>
+  <p>The colour of your <strong>fingernail bed</strong> (the pink area under your nail) changes depending on how much
+    hemoglobin is in your blood:</p>
+  <ul>
+    <li><strong>Healthy blood</strong> (high hemoglobin) &rarr; the nail bed looks <strong>pink or reddish</strong></li>
+    <li><strong>Anemic blood</strong> (low hemoglobin) &rarr; the nail bed looks <strong>pale or whitish</strong></li>
+  </ul>
+  <p>This is actually the same thing doctors check during a physical exam &mdash; they press your nail and look at the
+    colour. AneDet does this automatically with a camera and artificial intelligence.</p>
+
+  <h3>What Does the System Look Like?</h3>
+  <p>The system is a small device with three parts:</p>
+  <ol>
+    <li><strong>A small computer</strong> (Raspberry Pi 5) &mdash; about the size of a credit card</li>
+    <li><strong>A camera</strong> (Raspberry Pi Camera Module 3) &mdash; points at the patient&rsquo;s finger</li>
+    <li><strong>A touchscreen</strong> (5 inches) &mdash; shows the results and lets the operator control the system
+    </li>
+  </ol>
+  <p>Everything runs on this small device. It does <strong>not</strong> need an internet connection &mdash; all the
+    intelligence is built in.</p>
+
+  <h3>How Does a Test Work?</h3>
+  <p>A typical test takes about <strong>26 seconds</strong> and works like this:</p>
+  <ol>
+    <li><strong>Place your finger</strong> &mdash; The patient holds their index finger or including middle and ring
+      finger in front of the camera, about
+      10&ndash;15 cm away</li>
+    <li><strong>The system finds the nail</strong> &mdash; The first AI automatically locates the fingernail in the
+      camera image (like how your phone camera finds faces)</li>
+    <li><strong>The system reads the colour</strong> &mdash; The second AI examines the nail colour and the skin colour
+      next to it. It compares them to hundreds of examples it has seen before</li>
+    <li><strong>It takes many readings</strong> &mdash; Over 16 seconds, the system takes about 20 separate readings and
+      combines them to get a reliable result</li>
+    <li><strong>The result appears on screen</strong> &mdash; A hemoglobin number (like &ldquo;13.2 g/dL&rdquo;) and a
+      status (&ldquo;Normal&rdquo;, &ldquo;Borderline&rdquo;, or &ldquo;Anemia&rdquo;)</li>
+  </ol>
+
+  <h3>What Do the Results Mean?</h3>
+
+  <table>
+    <tr>
+      <th>Result on Screen</th>
+      <th>What It Means</th>
+      <th>What to Do</th>
+    </tr>
+    <tr>
+      <td><span class="badge normal">Normal</span></td>
+      <td>Hemoglobin is above 12.2 g/dL. Blood appears healthy.</td>
+      <td>No action needed for anemia.</td>
+    </tr>
+    <tr>
+      <td><span class="badge mild">Borderline</span></td>
+      <td>Hemoglobin is between 12.0 and 12.2 g/dL. Too close to call.</td>
+      <td>Consider a follow-up lab test to be sure.</td>
+    </tr>
+    <tr>
+      <td><span class="badge mild">Mild Anemia</span></td>
+      <td>Hemoglobin is between 10.0 and 11.9 g/dL.</td>
+      <td>Refer to a doctor for a confirmatory blood test.</td>
+    </tr>
+    <tr>
+      <td><span class="badge moderate">Moderate Anemia</span></td>
+      <td>Hemoglobin is between 8.0 and 9.9 g/dL.</td>
+      <td>Refer to a doctor promptly.</td>
+    </tr>
+    <tr>
+      <td><span class="badge severe">Severe Anemia</span></td>
+      <td>Hemoglobin is below 8.0 g/dL.</td>
+      <td>Urgent medical attention needed.</td>
+    </tr>
+  </table>
+
+  <div class="callout caution">
+    <div class="callout-title">&#9888;&#65039; Important Reminder</div>
+    AneDet is a <strong>screening tool</strong>, not a medical diagnosis. Think of it like a thermometer &mdash; it can
+    tell you something might be wrong, but a doctor still needs to confirm with a proper blood test. <strong>Never use
+      this result alone to make treatment decisions.</strong>
+  </div>
+
+  <h3>How Accurate Is It?</h3>
+  <p>Based on testing with 673 patients:</p>
+  <ul>
+    <li><strong>Sensitivity: ~82%</strong> &mdash; Out of 100 anemic patients, the system correctly identifies about 82
+      of them</li>
+    <li><strong>Specificity: ~80%</strong> &mdash; Out of 100 healthy patients, the system correctly identifies about 80
+      of them</li>
+    <li><strong>Average error: about 1.3 g/dL</strong> &mdash; The system&rsquo;s estimate is typically within 1.3 g/dL
+      of the true lab value</li>
+  </ul>
+  <p>This means the system is <strong>useful for screening</strong> (quickly checking many people) but is <strong>not a
+      replacement for laboratory blood tests</strong>. Some healthy people may be flagged as anemic, and some anemic
+    people may be missed.</p>
+
+  <h3>How Does the AI &ldquo;Learn&rdquo; to Read Nail Colour?</h3>
+  <p>Think of it like training a new doctor:</p>
+  <ol>
+    <li><strong>Show many examples</strong> &mdash; The AI was shown 673 photos of fingernails from different patients,
+      along with their actual hemoglobin levels from lab blood tests</li>
+    <li><strong>Let it find patterns</strong> &mdash; The AI gradually learned which nail colours correspond to which
+      hemoglobin levels. Paler nails generally mean lower hemoglobin</li>
+    <li><strong>Test it on new patients</strong> &mdash; After training, the AI was tested on patients it had never seen
+      before to make sure it works on strangers, not just the people it practised on</li>
+  </ol>
+  <p>The AI also looks at the <strong>skin colour next to the nail</strong> as a reference. This helps compensate for
+    different lighting conditions &mdash; just like how a human would compare &ldquo;is the nail paler <em>than the
+      surrounding skin</em>?&rdquo; rather than judging nail colour in isolation.</p>
+
+  <h3>Why Does It Take 20 Readings Instead of Just One?</h3>
+  <p>Imagine you&rsquo;re trying to weigh yourself on a shaky scale. One reading might say 70 kg, the next might say 72
+    kg, and the next 69 kg. None of them are perfectly accurate. But if you take 20 readings and use the <strong>middle
+      value</strong>, you get a much more reliable answer.</p>
+  <p>The AI works the same way &mdash; each individual prediction has some uncertainty, so the system takes many
+    readings, throws out the obvious outliers, and uses the stable middle value as the final result.</p>
+
+  <h3>What Are the Safety Features?</h3>
+  <p>The system has several built-in safety measures:</p>
+  <ul>
+    <li><strong>Focus check</strong> &mdash; If the camera image is blurry, the system waits until it&rsquo;s sharp
+      before taking readings</li>
+    <li><strong>Confidence check</strong> &mdash; If the AI isn&rsquo;t confident it found the nail, it won&rsquo;t take
+      a reading</li>
+    <li><strong>Outlier removal</strong> &mdash; If one reading is wildly different from the others, it&rsquo;s
+      automatically discarded</li>
+    <li><strong>Minimum samples</strong> &mdash; If fewer than 6 good readings were collected, the system says &ldquo;No
+      Valid Reading&rdquo; instead of guessing</li>
+    <li><strong>Borderline band</strong> &mdash; Results very close to the anemia boundary (12.0&ndash;12.2 g/dL) are
+      labelled &ldquo;Borderline&rdquo; instead of being forced into Normal or Anemia</li>
+  </ul>
+
+  <hr>
+
+  <div class="callout tip">
+    <div class="callout-title">&#128161; End of Plain English Guide</div>
+    Everything below this point is the <strong>technical documentation</strong>. It explains exactly how each component
+    works at the code level.
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ol start="0">
+      <li>Plain English Guide (above)</li>
+      <li>What the System Does</li>
+      <li>Hardware Overview</li>
+      <li>Software Architecture</li>
+      <li>File Inventory</li>
+      <li>The Two AI Models</li>
+      <li>How a Measurement Works (User Perspective)</li>
+      <li>How a Measurement Works (Technical Deep-Dive)</li>
+      <li>Signal Stabilisation Pipeline</li>
+      <li>Unit Conversion &amp; Calibration</li>
+      <li>The Web Interface</li>
+      <li>Database &amp; Data Privacy</li>
+      <li>How the Model Was Trained</li>
+      <li>Configuration &amp; Tuning Reference</li>
+      <li>Starting the System</li>
+    </ol>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2>1. What the System Does</h2>
+
+  <p>AneDet is a <strong>non-invasive anemia screening tool</strong>. Instead of drawing blood, it:</p>
+  <ol>
+    <li><strong>Points a camera at the patient's fingernail</strong> (index finger)</li>
+    <li><strong>Detects the nail</strong> automatically using a YOLO object detection model</li>
+    <li><strong>Analyses the nail colour</strong> using a MobileNetV3 regression model</li>
+    <li><strong>Estimates the hemoglobin (Hb) level</strong> in g/dL</li>
+    <li><strong>Classifies the result</strong> as Normal, Mild Anemia, Moderate Anemia, or Severe Anemia</li>
+  </ol>
+
+  <p>The system runs entirely on-device &mdash; no internet connection is needed. The whole process takes about
+    <strong>26 seconds</strong> per reading.
+  </p>
+
+  <h3>Clinical Thresholds (g/dL)</h3>
+
+  <table>
+    <tr>
+      <th>Status</th>
+      <th>Hb Range</th>
+    </tr>
+    <tr>
+      <td><span class="badge normal">Normal</span></td>
+      <td>&gt; 12.2 g/dL</td>
+    </tr>
+    <tr>
+      <td><span class="badge mild">Borderline</span></td>
+      <td>12.0 &ndash; 12.2 g/dL</td>
+    </tr>
+    <tr>
+      <td><span class="badge mild">Mild Anemia</span></td>
+      <td>10.0 &ndash; 11.9 g/dL</td>
+    </tr>
+    <tr>
+      <td><span class="badge moderate">Moderate Anemia</span></td>
+      <td>8.0 &ndash; 9.9 g/dL</td>
+    </tr>
+    <tr>
+      <td><span class="badge severe">Severe Anemia</span></td>
+      <td>&lt; 8.0 g/dL</td>
+    </tr>
+  </table>
+
+  <div class="callout tip">
+    <div class="callout-title">&#128161; Borderline Band</div>
+    The <strong>Borderline</strong> band (12.0&ndash;12.2 g/dL) is a deliberate buffer zone. Values in this range are
+    too close to the anemia boundary to classify confidently, so the system labels them as &ldquo;Borderline&rdquo;
+    rather than making a potentially wrong call.
+  </div>
+
+  <div class="callout note">
+    <div class="callout-title">&#9432; Screening Tool Disclaimer</div>
+    These thresholds are roughly aligned with WHO guidelines. The system is intended as a <strong>screening
+      tool</strong>, not a diagnostic device &mdash; positive results should be confirmed with a laboratory blood test.
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">2. Hardware Overview</h2>
+
+  <p>The system runs on three physical components:</p>
+
+  <div class="hw-stack">
+    <div class="hw-box">
+      <div class="hw-title">5-inch Touchscreen</div>
+      <div class="hw-desc">Shows the web UI via Chromium browser</div>
+    </div>
+    <div class="hw-link"><span class="hw-link-label">DSI / HDMI</span></div>
+    <div class="hw-box">
+      <div class="hw-title">Raspberry Pi 5</div>
+      <div class="hw-desc">Runs Flask server + AI models</div>
+    </div>
+    <div class="hw-link"><span class="hw-link-label">CSI ribbon cable</span></div>
+    <div class="hw-box">
+      <div class="hw-title">Camera Module 3</div>
+      <div class="hw-desc">640&times;480, continuous autofocus</div>
+    </div>
+  </div>
+
+  <h3>Camera Configuration</h3>
+  <p>The <strong>Raspberry Pi Camera Module 3</strong> has autofocus, which is critical for close-up nail imaging at
+    10&ndash;15 cm distance.</p>
+
+  <table>
+    <tr>
+      <th>Setting</th>
+      <th>Value</th>
+      <th>Why</th>
+    </tr>
+    <tr>
+      <td>Resolution</td>
+      <td>640 &times; 480</td>
+      <td>Fast enough for real-time processing on Pi 5</td>
+    </tr>
+    <tr>
+      <td>Format</td>
+      <td>RGB888</td>
+      <td>Direct BGR in memory &mdash; no conversion needed for OpenCV</td>
+    </tr>
+    <tr>
+      <td>Autofocus Mode</td>
+      <td>Continuous + Fast</td>
+      <td>Keeps the nail sharp as the user adjusts position</td>
+    </tr>
+    <tr>
+      <td>Fallback Focus</td>
+      <td>Manual, LensPosition = 8.0</td>
+      <td>~12.5 cm focal distance if autofocus is unavailable</td>
+    </tr>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">3. Software Architecture</h2>
+
+  <p>The system is a <strong>Flask web application</strong> that runs locally on the Pi. The user interacts with it
+    through a Chromium browser (typically launched in kiosk mode on the 5-inch display).</p>
+
+  <h3>Thread Architecture</h3>
+
+  <p>There are <strong>3 concurrent execution contexts</strong>:</p>
+
+  <table>
+    <tr>
+      <th>Thread</th>
+      <th>Role</th>
+      <th>Heavy Work?</th>
+    </tr>
+    <tr>
+      <td><strong>Flask Main</strong></td>
+      <td>Serves HTML, handles API calls (<code>/start_session</code>, <code>/get_result</code>,
+        <code>/save_measurement</code>)
+      </td>
+      <td>No &mdash; lightweight HTTP</td>
+    </tr>
+    <tr>
+      <td><strong>Inference Worker</strong></td>
+      <td>Runs YOLO nail detection, evaluates focus sharpness, runs ONNX Hb model</td>
+      <td><strong>Yes</strong> &mdash; all AI runs here</td>
+    </tr>
+    <tr>
+      <td><strong>Frame Generator</strong></td>
+      <td>Captures camera frames, draws bounding boxes + status overlay, encodes JPEG, streams via MJPEG</td>
+      <td>Moderate &mdash; image encoding only</td>
+    </tr>
+  </table>
+
+  <div class="hw-stack">
+    <div class="hw-box">
+      <div class="hw-title">Flask Main Thread</div>
+      <div class="hw-desc">Serves web pages + API endpoints</div>
+    </div>
+    <div class="hw-link"><span class="hw-link-label">starts via /video_feed</span></div>
+    <div class="hw-box">
+      <div class="hw-title">Frame Generator</div>
+      <div class="hw-desc">Captures frames, draws overlays, streams MJPEG<br>Reads from InferenceState</div>
+    </div>
+    <div class="hw-link"><span class="hw-link-label">spawns</span></div>
+    <div class="hw-box" style="border-color: var(--accent); background: var(--bg-important);">
+      <div class="hw-title" style="color: #e37400;">Inference Worker Thread</div>
+      <div class="hw-desc">YOLO detection + focus eval + ONNX Hb inference<br>
+        Writes to &rarr; InferenceState (mutex-locked)<br>
+        Writes to &rarr; Session State (mutex-locked)<br>
+        Reads from &rarr; Picamera2 (mutex-locked)</div>
+    </div>
+  </div>
+
+  <div class="callout important">
+    <div class="callout-title">&#9888;&#65039; Why separate the inference worker from the frame generator?</div>
+    YOLO detection and ONNX inference take ~0.4&ndash;0.8 seconds each on Pi 5. If these ran inside the frame generator,
+    the video stream would freeze during every inference step. By putting heavy computation in a background thread, the
+    MJPEG stream stays smooth (~10&ndash;15 FPS) while inference runs independently.
+  </div>
+
+  <h3>Shared State: InferenceState</h3>
+  <p>The <code>InferenceState</code> dataclass acts as the communication channel between the inference worker and frame
+    generator:</p>
+
+  <table>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td><code>cached_boxes</code></td>
+      <td>list</td>
+      <td>YOLO bounding boxes for overlay drawing</td>
+    </tr>
+    <tr>
+      <td><code>smoothed_nail_box</code></td>
+      <td>list</td>
+      <td>EMA-smoothed nail position for stable inference</td>
+    </tr>
+    <tr>
+      <td><code>best_live_nail_conf</code></td>
+      <td>float</td>
+      <td>Highest nail detection confidence</td>
+    </tr>
+    <tr>
+      <td><code>focus_ok</code></td>
+      <td>bool</td>
+      <td>Is the image sharp enough?</td>
+    </tr>
+    <tr>
+      <td><code>smoothed_hb</code></td>
+      <td>float</td>
+      <td>EMA-smoothed Hb value for display</td>
+    </tr>
+    <tr>
+      <td><code>hb_history</code></td>
+      <td>deque(15)</td>
+      <td>Rolling window of raw Hb predictions</td>
+    </tr>
+    <tr>
+      <td><code>quality_ok</code></td>
+      <td>bool</td>
+      <td>Combined nail + focus quality check</td>
+    </tr>
+    <tr>
+      <td><code>quality_score</code></td>
+      <td>int</td>
+      <td>0&ndash;100 score for UI progress bar</td>
+    </tr>
+    <tr>
+      <td><code>quality_tip</code></td>
+      <td>str</td>
+      <td>User guidance text</td>
+    </tr>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">4. File Inventory</h2>
+
+  <h3>Core Application Files</h3>
+  <table>
+    <tr>
+      <th>File</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td><code>app2.py</code></td>
+      <td><strong>Main application</strong> &mdash; Flask server, camera control, YOLO + ONNX inference, all routes</td>
+    </tr>
+    <tr>
+      <td><code>hb_regressor.onnx</code></td>
+      <td>FP32 ONNX hemoglobin regression model (4.0 MB)</td>
+    </tr>
+    <tr>
+      <td><code>hb_regressor_config.json</code></td>
+      <td>Model configuration: skin feature normalisation stats, calibration params, threshold</td>
+    </tr>
+    <tr>
+      <td><code>best.pt</code></td>
+      <td>YOLO nail detection model (expected in the working directory)</td>
+    </tr>
+    <tr>
+      <td><code>templates/index.html</code></td>
+      <td>Web UI template (Flask renders this)</td>
+    </tr>
+    <tr>
+      <td><code>static/style.css</code></td>
+      <td>UI styling</td>
+    </tr>
+    <tr>
+      <td><code>static/script.js</code></td>
+      <td>Frontend JavaScript (session control, polling, virtual keyboard)</td>
+    </tr>
+  </table>
+
+  <h3>Training &amp; Evaluation Files</h3>
+  <table>
+    <tr>
+      <th>File</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td><code>train_hb_regressor.py</code></td>
+      <td>Training script that produces the ONNX model and config JSON</td>
+    </tr>
+    <tr>
+      <td><code>hb_regressor_best.pt</code></td>
+      <td>PyTorch checkpoint (best model weights)</td>
+    </tr>
+    <tr>
+      <td><code>hb_regressor_training_summary.json</code></td>
+      <td>Full training report: metrics, cross-validation, seed stability</td>
+    </tr>
+    <tr>
+      <td><code>hb_regressor_cv_summary.json</code></td>
+      <td>3-fold cross-validation results</td>
+    </tr>
+    <tr>
+      <td><code>hb_regressor_seed_runs.csv</code></td>
+      <td>Per-seed training metrics comparison</td>
+    </tr>
+  </table>
+
+  <h3>Data</h3>
+  <table>
+    <tr>
+      <th>Path</th>
+      <th>Content</th>
+    </tr>
+    <tr>
+      <td><code>data2/metadata.csv</code></td>
+      <td>673 patients, Hb levels, bounding box annotations</td>
+    </tr>
+    <tr>
+      <td><code>data2/photo/</code></td>
+      <td>Patient fingernail images</td>
+    </tr>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">5. The Two AI Models</h2>
+
+  <p>The system uses <strong>two models in sequence</strong>: one to find the nail, one to predict hemoglobin.</p>
+
+  <h3>Model 1: YOLO Nail Detector (<code>best.pt</code>)</h3>
+  <table>
+    <tr>
+      <th>Property</th>
+      <th>Value</th>
+    </tr>
+    <tr>
+      <td>Purpose</td>
+      <td>Locate the fingernail in the camera frame</td>
+    </tr>
+    <tr>
+      <td>Architecture</td>
+      <td>YOLOv8 (Ultralytics)</td>
+    </tr>
+    <tr>
+      <td>Input</td>
+      <td>Full camera frame (640&times;480)</td>
+    </tr>
+    <tr>
+      <td>Output</td>
+      <td>Bounding boxes with class ID and confidence score</td>
+    </tr>
+    <tr>
+      <td>Class 0</td>
+      <td>Nail</td>
+    </tr>
+    <tr>
+      <td>Live inference size</td>
+      <td>416 pixels (faster for real-time)</td>
+    </tr>
+    <tr>
+      <td>Session inference size</td>
+      <td>640 pixels (more accurate for Hb prediction)</td>
+    </tr>
+    <tr>
+      <td>Run frequency</td>
+      <td>Every 0.4 seconds</td>
+    </tr>
+  </table>
+
+  <p>Every 0.4 seconds, the inference worker runs YOLO on the latest camera frame. It finds all nail bounding boxes,
+    picks the one with the highest confidence, and smooths its position using an exponential moving average (EMA) to
+    reduce jitter.</p>
+
+  <h3>Model 2: Hemoglobin Regressor (<code>hb_regressor.onnx</code>)</h3>
+  <table>
+    <tr>
+      <th>Property</th>
+      <th>Value</th>
+    </tr>
+    <tr>
+      <td>Purpose</td>
+      <td>Predict hemoglobin level from nail + skin colour</td>
+    </tr>
+    <tr>
+      <td>Architecture</td>
+      <td>MobileNetV3-Small backbone + linear regression head</td>
+    </tr>
+    <tr>
+      <td>Input 1</td>
+      <td><code>image</code>: nail crop resized to 224&times;224&times;3, ImageNet-normalised</td>
+    </tr>
+    <tr>
+      <td>Input 2</td>
+      <td><code>skin_features</code>: 6 Lab colour values (nail L,a,b + skin L,a,b)</td>
+    </tr>
+    <tr>
+      <td>Output</td>
+      <td><code>hb_prediction</code>: single float in g/L</td>
+    </tr>
+    <tr>
+      <td>Runtime</td>
+      <td>ONNX Runtime, CPUExecutionProvider, 4 threads</td>
+    </tr>
+    <tr>
+      <td>Run frequency</td>
+      <td>Every 0.8 seconds during acquisition phase</td>
+    </tr>
+  </table>
+
+  <h3>How the 6 Skin Features Are Computed</h3>
+
+  <pre><code>def compute_nail_skin_ratio(nail_patch, skin_patch):
+    nail_lab = cv2.cvtColor(nail_patch, cv2.COLOR_BGR2Lab)
+    skin_lab = cv2.cvtColor(skin_patch, cv2.COLOR_BGR2Lab)
+    nail_mean = nail_lab.reshape(-1, 3).mean(axis=0)   # → 3 values (L, a, b)
+    skin_mean = skin_lab.reshape(-1, 3).mean(axis=0)   # → 3 values (L, a, b)
+    return [nail_L, nail_a, nail_b, skin_L, skin_a, skin_b]  # → 6 total</code></pre>
+
+  <p>These features are then <strong>z-normalised</strong> using training-set statistics from
+    <code>hb_regressor_config.json</code>:
+  </p>
+
+  <table>
+    <tr>
+      <th>Feature</th>
+      <th>Mean</th>
+      <th>Std</th>
+      <th>Interpretation</th>
+    </tr>
+    <tr>
+      <td>Nail L</td>
+      <td>153.4</td>
+      <td>18.3</td>
+      <td>Nail lightness</td>
+    </tr>
+    <tr>
+      <td>Nail a</td>
+      <td>140.3</td>
+      <td>2.2</td>
+      <td>Nail red-green <em>(key anemia indicator)</em></td>
+    </tr>
+    <tr>
+      <td>Nail b</td>
+      <td>131.9</td>
+      <td>6.0</td>
+      <td>Nail blue-yellow</td>
+    </tr>
+    <tr>
+      <td>Skin L</td>
+      <td>159.2</td>
+      <td>21.4</td>
+      <td>Skin lightness (normalisation reference)</td>
+    </tr>
+    <tr>
+      <td>Skin a</td>
+      <td>133.3</td>
+      <td>4.4</td>
+      <td>Skin red-green</td>
+    </tr>
+    <tr>
+      <td>Skin b</td>
+      <td>141.4</td>
+      <td>4.3</td>
+      <td>Skin blue-yellow</td>
+    </tr>
+  </table>
+
+  <div class="callout tip">
+    <div class="callout-title">&#128161; Why These Features Matter</div>
+    The <strong><code>a</code> channel in Lab space</strong> is the most clinically important &mdash; it represents
+    redness. Anemic nails have pale nail beds with lower <code>a</code> values. The skin features act as a
+    <strong>lighting normalisation reference</strong>: by comparing nail colour to adjacent skin colour, the model
+    becomes less sensitive to ambient lighting conditions.
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">6. How a Measurement Works (User Perspective)</h2>
+
+  <p>A measurement has 3 phases that the user sees on screen:</p>
+
+  <h3>Phase 1: Positioning (at least 10 seconds)</h3>
+  <ol>
+    <li>User taps <strong>&ldquo;Start Reading&rdquo;</strong></li>
+    <li>Camera feed appears on screen</li>
+    <li>User places their <strong>index fingernail</strong> in front of the camera (~10&ndash;15 cm away)</li>
+    <li>The <strong>Placement Quality</strong> bar fills up as the system detects the nail and confirms focus</li>
+    <li>Green bounding box appears around the detected nail</li>
+    <li>User guidance text updates: <em>&ldquo;Place index fingernail in the center&rdquo;</em> &rarr; <em>&ldquo;Hold
+        still&rdquo;</em> &rarr; <em>&ldquo;Great position&rdquo;</em></li>
+  </ol>
+
+  <div class="callout note">
+    <div class="callout-title">&#9432; Phase Duration</div>
+    This phase lasts <strong>at least 10 seconds</strong>, but it will wait longer if placement quality isn't confirmed
+    yet. The system transitions to the next phase only when <strong>both</strong> 10 seconds have elapsed
+    <strong>and</strong> <code>quality_ok = true</code> (nail detected with sufficient confidence + image is sharp).
+  </div>
+
+  <h3>Phase 2: Acquiring (16 seconds)</h3>
+  <ol>
+    <li>Automatically starts after positioning quality is confirmed</li>
+    <li>The system takes <strong>~20 hemoglobin readings</strong> over 16 seconds</li>
+    <li>Status shows <strong>&ldquo;ANALYZING&rdquo;</strong> with a countdown timer</li>
+    <li>Each reading is a separate ONNX model inference</li>
+    <li>Intermediate values are smoothed so the display doesn't jump around</li>
+  </ol>
+
+  <h3>Phase 3: Done</h3>
+  <ol>
+    <li>The system computes the <strong>final Hb value</strong> from all collected samples</li>
+    <li>The <strong>Estimated Hemoglobin Level</strong> appears (e.g., &ldquo;11.7 g/dL&rdquo;)</li>
+    <li>A <strong>status badge</strong> shows the classification (e.g., &ldquo;MILD ANEMIA&rdquo;)</li>
+    <li>User can tap <strong>&ldquo;Save Reading Data&rdquo;</strong> to store the result in the database</li>
+  </ol>
+
+  <h3>What Can Go Wrong</h3>
+  <table>
+    <tr>
+      <th>Problem</th>
+      <th>What User Sees</th>
+      <th>System Response</th>
+    </tr>
+    <tr>
+      <td>No nail detected</td>
+      <td>Quality bar stays at 0%</td>
+      <td><em>&ldquo;Place index fingernail in the center&rdquo;</em></td>
+    </tr>
+    <tr>
+      <td>Nail detected but blurry</td>
+      <td>Quality bar partial</td>
+      <td><em>&ldquo;Hold still and move your finger to a sharper distance&rdquo;</em></td>
+    </tr>
+    <tr>
+      <td>Too few valid samples</td>
+      <td>&ldquo;No Valid Reading&rdquo;</td>
+      <td>User should retry with better positioning</td>
+    </tr>
+    <tr>
+      <td>Readings are inconsistent</td>
+      <td>Result still shown</td>
+      <td>IQR filtering removes outliers automatically</td>
+    </tr>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">7. How a Measurement Works (Technical Deep-Dive)</h2>
+
+  <h3>Startup Sequence</h3>
+  <p>When <code>app2.py</code> starts, it performs these steps in order:</p>
+
+  <div class="flow">
+    <div class="flow-node">Load encryption key</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Initialise SQLite database</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Start Picamera2 (640&times;480, continuous AF)</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Load YOLO model (<strong>best.pt</strong>)</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Load ONNX model (<strong>hb_regressor.onnx</strong>)</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Load config JSON (feature norms, calibration, threshold)</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node green"><strong>Start Flask server on port 5000</strong></div>
+  </div>
+
+  <h3>Phase Transitions (State Machine)</h3>
+
+  <div class="flow">
+    <div class="flow-node start">idle</div>
+    <div class="flow-arrow"><span class="label">User taps &ldquo;Start&rdquo;</span></div>
+    <div class="flow-node accent"><strong>positioning</strong><br>Wait for nail detection + focus</div>
+    <div class="flow-arrow"><span class="label">10s elapsed AND quality_ok = true</span></div>
+    <div class="flow-node accent"><strong>acquiring</strong><br>Collecting Hb samples (~20 readings)</div>
+    <div class="flow-arrow"><span class="label">16s elapsed</span></div>
+    <div class="flow-node green"><strong>done</strong><br>Final result displayed</div>
+    <div class="flow-arrow"><span class="label">User taps &ldquo;Stop&rdquo; or starts new session</span></div>
+    <div class="flow-node start">idle</div>
+  </div>
+
+  <h3>Positioning Phase: What the Inference Worker Does</h3>
+  <p>Every cycle (~20ms sleep + processing time), the worker thread does:</p>
+  <ol>
+    <li><strong>Captures a frame</strong> from Picamera2 (thread-safe via <code>_camera_lock</code>)</li>
+    <li><strong>Focus evaluation</strong> (every 0.25s):
+      <ul>
+        <li>Crops a region around the detected nail (or center 50% of frame)</li>
+        <li>Computes <strong>Laplacian variance</strong> (sharpness metric)</li>
+        <li>Maintains a rolling window of 6 sharpness scores</li>
+        <li><code>focus_ok = median(sharpness) &ge; 25.0</code></li>
+      </ul>
+    </li>
+    <li><strong>YOLO detection</strong> (every 0.4s):
+      <ul>
+        <li>Runs YOLO at 416px input size</li>
+        <li>Extracts all nail bounding boxes (class ID 0)</li>
+        <li>Picks the highest-confidence detection</li>
+        <li><strong>EMA-smooths</strong> the bounding box position (&alpha;=0.25) to reduce jitter</li>
+      </ul>
+    </li>
+    <li><strong>Quality assessment</strong>:
+      <ul>
+        <li><code>quality_ok = nail_detected AND nail_conf &ge; 0.18 AND focus_ok</code></li>
+        <li>Computes a 0&ndash;100 quality score: 60 points for nail confidence + 40 points for focus</li>
+        <li>Generates a user-facing tip string</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h3>Acquiring Phase: Hb Inference Loop</h3>
+  <p>Once quality is confirmed and 10 seconds have elapsed, the system transitions to acquiring. <strong>Every 0.8
+      seconds</strong>, the worker checks: Is there a smoothed nail box? Is confidence &ge; 0.34?</p>
+
+  <p>If yes, it runs the full Hb inference pipeline:</p>
+
+  <div class="flow">
+    <div class="flow-node start">Camera Frame</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Crop nail from <strong>smoothed bounding box</strong></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Derive skin patch (96&times;96px below nail)</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node accent"><strong>TTA: 5 shifted crops</strong><br>(0,0), (&plusmn;5,0), (0,&plusmn;5)</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">For each shift: preprocess &rarr; ONNX inference</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Take <strong>median</strong> of 5 predictions</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Convert g/L &rarr; g/dL (&divide; 10) + slope correction</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Clip to [5.0, 18.0] g/dL</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node green"><strong>Add to session_samples</strong></div>
+  </div>
+
+  <h4>Key Details:</h4>
+  <ul>
+    <li><strong>Skin patch derivation:</strong> Cropped from <strong>below the nail</strong> &mdash; centered
+      horizontally under the nail box, offset 4 pixels below the bottom edge. Size: 96&times;96 pixels.</li>
+    <li><strong>Test-Time Augmentation (TTA):</strong> Runs the model <strong>5 times</strong> on slightly shifted crops
+      (&plusmn;5 pixels). The <strong>median</strong> of the 5 predictions reduces sensitivity to exact crop
+      positioning.</li>
+    <li><strong>Confidence gating:</strong> Only samples with confidence &ge; 0.34 are accepted. Only samples where the
+      skin patch was derived from the actual detection box (not a fallback) are kept.</li>
+  </ul>
+
+  <h3>Done Phase: Final Result Computation</h3>
+  <p>When 16 seconds of acquisition have elapsed:</p>
+
+  <div class="flow">
+    <div class="flow-node">All <strong>session_samples</strong> (~20 raw Hb values)</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Take last <strong>10 samples</strong> (most recent)</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">IQR outlier filtering<br><small>Remove values outside Q1 &minus; 1.5&times;IQR to Q3 +
+        1.5&times;IQR</small></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Compute <strong>median Hb</strong></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node decision wide"><strong>Anemia Guard</strong><br>Is median &ge; threshold BUT 30th percentile
+      &lt; threshold AND &ge;40% of samples &lt; threshold?</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-branch">
+      <div class="flow-branch-col">
+        <div class="flow-branch-label">YES</div>
+        <div class="flow-node accent narrow"><strong>Blend:</strong> 70% median + 30% lower percentile</div>
+      </div>
+      <div class="flow-branch-divider"></div>
+      <div class="flow-branch-col">
+        <div class="flow-branch-label">NO</div>
+        <div class="flow-node narrow">Use median directly</div>
+      </div>
+    </div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Classify result<br><small>Normal / Borderline / Mild / Moderate / Severe</small></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node green"><strong>Display on screen</strong></div>
+  </div>
+
+  <p><strong>Key safety features:</strong></p>
+  <ul>
+    <li><strong><code>MIN_VALID_SAMPLES = 6</code>:</strong> If fewer than 6 good samples were collected, the result
+      is &ldquo;No Valid Reading&rdquo;</li>
+    <li><strong>IQR filtering:</strong> Removes outlier predictions (e.g., if the user moved their finger during one
+      frame)</li>
+    <li><strong>Anemia Guard:</strong> If the median says &ldquo;Normal&rdquo; but &ge;40% of readings say
+      &ldquo;Anemic,&rdquo; the result is gently nudged downward (70/30 blend with the 30th percentile)</li>
+    <li><strong>Borderline detection:</strong> If Hb is within &plusmn;0.3 g/dL of the threshold and anemia ratio is
+      35&ndash;65%, the result is &ldquo;Borderline - Recheck&rdquo;</li>
+  </ul>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">8. Signal Stabilisation Pipeline</h2>
+
+  <p>Raw model predictions are noisy. The system applies <strong>four layers</strong> of smoothing:</p>
+
+  <h3>Layer 1: TTA Median (Per-Frame)</h3>
+  <ul>
+    <li>5 shifted crops &rarr; median prediction</li>
+    <li><strong>Removes:</strong> random crop-position sensitivity</li>
+  </ul>
+
+  <h3>Layer 2: Rolling History Median (Across Frames)</h3>
+  <ul>
+    <li>Maintains a deque of the last 15 raw Hb values</li>
+    <li>Each new prediction is compared to the <strong>median of the history</strong>, not the raw value</li>
+    <li><strong>Removes:</strong> frame-to-frame noise</li>
+  </ul>
+
+  <h3>Layer 3: EMA Smoothing with Asymmetric Step Caps (Display)</h3>
+  <pre><code>delta = history_median - smoothed_hb
+if delta >= 0:
+    delta = min(delta, 0.05)    # slow upward moves (conservative)
+else:
+    delta = -min(abs(delta), 0.18)  # faster downward correction (safety)
+candidate = smoothed_hb + 0.10 * delta
+if abs(candidate - smoothed_hb) >= 0.10:   # deadband
+    smoothed_hb = candidate</code></pre>
+
+  <table>
+    <tr>
+      <th>Parameter</th>
+      <th>Value</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td><code>SMOOTHING_ALPHA</code></td>
+      <td>0.10</td>
+      <td>How much each new reading influences the display</td>
+    </tr>
+    <tr>
+      <td><code>MAX_HB_STEP_UP</code></td>
+      <td>0.05 g/dL</td>
+      <td>Maximum increase per update (prevents false normal jumps)</td>
+    </tr>
+    <tr>
+      <td><code>MAX_HB_STEP_DOWN</code></td>
+      <td>0.18 g/dL</td>
+      <td>Maximum decrease per update (allows fast anemia detection)</td>
+    </tr>
+    <tr>
+      <td><code>HB_DEADBAND</code></td>
+      <td>0.10 g/dL</td>
+      <td>Minimum change before display updates (prevents flicker)</td>
+    </tr>
+  </table>
+
+  <div class="callout important">
+    <div class="callout-title">&#9888;&#65039; Asymmetric Step Caps &mdash; Safety by Design</div>
+    In screening, a false negative (missing anemia) is more dangerous than a false positive (flagging a normal
+    person). So the system moves <strong>slowly upward</strong> toward &ldquo;Normal&rdquo; but moves
+    <strong>quickly downward</strong> toward &ldquo;Anemia.&rdquo;
+  </div>
+
+  <h3>Layer 4: Session Aggregation (Final Result)</h3>
+  <ul>
+    <li>Takes the last 10 samples</li>
+    <li>IQR filtering removes outliers</li>
+    <li>Median of filtered samples = final Hb</li>
+    <li>Anemia Guard may pull the result lower</li>
+  </ul>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">9. Unit Conversion &amp; Calibration</h2>
+
+  <h3>The Unit Problem</h3>
+  <p>The model is trained on data labelled in <strong>g/L</strong> (grams per litre), but clinical Hb is reported in
+    <strong>g/dL</strong> (grams per decilitre):
+  </p>
+  <pre><code>g/dL = g/L ÷ 10</code></pre>
+  <p>So a model output of 120 g/L becomes 12.0 g/dL.</p>
+
+  <h3>Calibration Pipeline</h3>
+  <p>The system has four calibration stages:</p>
+
+  <div class="flow">
+    <div class="flow-node start">Model Output (g/L)</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node"><strong>Config Calibration</strong><br><small>slope &times; pred +
+        intercept</small><br><small style="color:#5f6368;">if HB_USE_CONFIG_CALIBRATION=True</small></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">&divide; 10 + <strong>BIAS_OFFSET</strong><br><small>Converts g/L &rarr; g/dL + manual
+        offset</small></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node accent"><strong>Slope Correction</strong><br>corrected = pivot + stretch &times; (raw &minus;
+      pivot)<br><small>pivot=12.0, stretch=1.3 &mdash; stretches outward from boundary</small></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node"><strong>Legacy Cal. Curve</strong><br><small>Piecewise linear with near-normal
+        lift</small><br><small style="color:#5f6368;">if HB_USE_LEGACY_CALIBRATION_CURVE=True</small></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">Clip to <strong>5.0 &ndash; 18.0 g/dL</strong></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node green"><strong>Final Hb (g/dL)</strong></div>
+  </div>
+
+  <p><strong>Default runtime:</strong> The &divide;10 conversion, slope correction (1.3&times; stretch), and final
+    clip are active. The config calibration and legacy curve are both <strong>disabled by default</strong>.</p>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">10. The Web Interface</h2>
+
+  <p>The UI is served as a single-page Flask template (<code>index.html</code>) with CSS and JavaScript.</p>
+
+  <h3>API Endpoints</h3>
+  <table>
+    <tr>
+      <th>Endpoint</th>
+      <th>Method</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td><code>/</code></td>
+      <td>GET</td>
+      <td>Serve the main HTML page</td>
+    </tr>
+    <tr>
+      <td><code>/video_feed</code></td>
+      <td>GET</td>
+      <td>MJPEG stream (live camera with overlays)</td>
+    </tr>
+    <tr>
+      <td><code>/start_session</code></td>
+      <td>POST</td>
+      <td>Begin a new measurement (&rarr; positioning phase)</td>
+    </tr>
+    <tr>
+      <td><code>/stop_session</code></td>
+      <td>POST</td>
+      <td>Abort current measurement (&rarr; idle)</td>
+    </tr>
+    <tr>
+      <td><code>/get_session_state</code></td>
+      <td>GET</td>
+      <td>Polled by frontend every ~500ms for phase, quality, Hb, status</td>
+    </tr>
+    <tr>
+      <td><code>/get_result</code></td>
+      <td>GET</td>
+      <td>Quick fetch of current Hb + status</td>
+    </tr>
+    <tr>
+      <td><code>/save_measurement</code></td>
+      <td>POST</td>
+      <td>Save a reading to the database (with optional patient name)</td>
+    </tr>
+    <tr>
+      <td><code>/admin/exit</code></td>
+      <td>POST</td>
+      <td>Password-protected: exit to desktop</td>
+    </tr>
+    <tr>
+      <td><code>/admin/export_records</code></td>
+      <td>POST</td>
+      <td>Password-protected: export database to CSV</td>
+    </tr>
+    <tr>
+      <td><code>/admin/reset_database</code></td>
+      <td>POST</td>
+      <td>Password-protected: delete all readings</td>
+    </tr>
+  </table>
+
+  <h3>Frontend Polling</h3>
+  <p>The JavaScript polls <code>/get_session_state</code> continuously while a session is active. Example response:
+  </p>
+  <pre><code>{
+    "phase": "acquiring",
+    "remaining": 8.3,
+    "quality_ok": true,
+    "quality_reason": "Quality OK",
+    "quality_score": 100,
+    "quality_tip": "Great position. Keep still until analysis completes.",
+    "samples": 12,
+    "hb": 11.7,
+    "status": "Mild Anemia"
+}</code></pre>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">11. Database &amp; Data Privacy</h2>
+
+  <h3>Storage</h3>
+  <p>Results are stored in a local <strong>SQLite database</strong> (<code>data/readings.db</code>):</p>
+
+  <table>
+    <tr>
+      <th>Column</th>
+      <th>Type</th>
+      <th>Content</th>
+    </tr>
+    <tr>
+      <td><code>id</code></td>
+      <td>INTEGER</td>
+      <td>Auto-incrementing primary key</td>
+    </tr>
+    <tr>
+      <td><code>created_at</code></td>
+      <td>TEXT</td>
+      <td>UTC timestamp</td>
+    </tr>
+    <tr>
+      <td><code>measurement_time</code></td>
+      <td>TEXT</td>
+      <td>Time of measurement</td>
+    </tr>
+    <tr>
+      <td><code>predicted_hb</code></td>
+      <td>REAL</td>
+      <td>Hemoglobin value in g/dL</td>
+    </tr>
+    <tr>
+      <td><code>predicted_status</code></td>
+      <td>TEXT</td>
+      <td>&ldquo;Normal&rdquo;, &ldquo;Mild Anemia&rdquo;, etc.</td>
+    </tr>
+    <tr>
+      <td><code>patient_name_enc</code></td>
+      <td>TEXT</td>
+      <td>Patient name (encrypted)</td>
+    </tr>
+  </table>
+
+  <h3>Encryption</h3>
+  <p>Patient names are encrypted <strong>at rest</strong> using a custom stream cipher with HMAC-SHA256 integrity:
+  </p>
+  <pre><code>Plaintext → XOR with SHA-256 keystream → prepend 16-byte nonce
+→ append 32-byte HMAC → Base64-encode</code></pre>
+  <ul>
+    <li>The encryption key is generated once and stored in <code>data/.anedet_secure.key</code> (permissions 0600)
+    </li>
+    <li>Can also be set via <code>ANEDET_DATA_KEY</code> environment variable</li>
+    <li>Decryption requires the same key &mdash; without it, patient names are unrecoverable</li>
+    <li>Designed for compliance with the <strong>Philippine Data Privacy Act (RA 10173)</strong></li>
+  </ul>
+
+  <h3>Admin Functions (Password-Protected)</h3>
+  <p>All admin operations require authentication:</p>
+  <ul>
+    <li><strong>Export Records:</strong> Decrypts all patient names and writes a CSV to
+      <code>databaseRecords/</code>
+    </li>
+    <li><strong>Reset Database:</strong> Deletes all readings (irreversible)</li>
+    <li><strong>Exit to Desktop:</strong> Kills the browser and exits the app cleanly</li>
+  </ul>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">12. How the Model Was Trained</h2>
+
+  <p>The training pipeline (<code>train_hb_regressor.py</code>) produces the ONNX model that runs on the Pi.</p>
+
+  <h3>Training Data</h3>
+  <ul>
+    <li><strong>673 patients</strong>, each with a hand photograph</li>
+    <li><strong>2,019 samples</strong> (multiple nail patches per patient, matched with skin patches)</li>
+    <li>Hb labels from <strong>laboratory blood tests</strong> in g/L</li>
+    <li>Split: 572 patients for train/val, 101 patients for test (patient-level split prevents leakage)</li>
+  </ul>
+
+  <h3>Model Architecture: HBRegressor</h3>
+  <pre><code>class HBRegressor(nn.Module):
+    # Backbone: MobileNetV3-Small (ImageNet pretrained)
+    features = mobilenet_v3_small().features  # → 576-dim feature vector
+    pool = AdaptiveAvgPool2d(1, 1)
+
+    # Regression head: concatenate 576 CNN features + 6 skin features
+    regressor = Sequential(
+        Linear(576 + 6, 128),   # fusion layer
+        ReLU(),
+        Dropout(0.3),
+        Linear(128, 1),         # → single Hb prediction (g/L)
+    )</code></pre>
+
+  <h3>Training Strategy</h3>
+  <table>
+    <tr>
+      <th>Phase</th>
+      <th>Epochs</th>
+      <th>What's Trained</th>
+      <th>Learning Rate</th>
+    </tr>
+    <tr>
+      <td><strong>Head-only</strong></td>
+      <td>10</td>
+      <td><code>regressor</code> only (backbone frozen)</td>
+      <td>1e-3</td>
+    </tr>
+    <tr>
+      <td><strong>Fine-tuning</strong></td>
+      <td>20</td>
+      <td>Last 4 backbone blocks + <code>regressor</code></td>
+      <td>3e-5 backbone, 1e-4 head</td>
+    </tr>
+  </table>
+  <ul>
+    <li><strong>Loss:</strong> <code>ThresholdAwareHuberLoss</code> &mdash; Huber loss (&delta;=10) with extra
+      weight near the 120 g/L anemia threshold</li>
+    <li><strong>Optimiser:</strong> AdamW (weight decay 1e-4)</li>
+    <li><strong>Scheduler:</strong> Cosine annealing per phase</li>
+    <li><strong>Early stopping:</strong> Patience of 8 epochs</li>
+    <li><strong>Data augmentation:</strong> Horizontal flip, &plusmn;10&deg; rotation, colour jitter, bounding box
+      jitter</li>
+  </ul>
+
+  <h3>Achieved Performance (Best Seed = 42)</h3>
+
+  <div class="two-col">
+    <div class="metric-card">
+      <div class="value">12.7</div>
+      <div class="label">Test MAE (g/L)</div>
+    </div>
+    <div class="metric-card">
+      <div class="value">82.1%</div>
+      <div class="label">Sensitivity (anemia recall)</div>
+    </div>
+    <div class="metric-card">
+      <div class="value">0.32</div>
+      <div class="label">R² Score</div>
+    </div>
+    <div class="metric-card">
+      <div class="value">80.4%</div>
+      <div class="label">Specificity (normal recall)</div>
+    </div>
+  </div>
+
+  <table>
+    <tr>
+      <th>Metric</th>
+      <th>Test Set (303 samples)</th>
+      <th>Patient-Level (101 patients)</th>
+    </tr>
+    <tr>
+      <td><strong>MAE</strong></td>
+      <td>12.7 g/L (1.27 g/dL)</td>
+      <td>11.4 g/L (1.14 g/dL)</td>
+    </tr>
+    <tr>
+      <td><strong>RMSE</strong></td>
+      <td>18.1 g/L</td>
+      <td>16.8 g/L</td>
+    </tr>
+    <tr>
+      <td><strong>R&sup2;</strong></td>
+      <td>0.32</td>
+      <td>0.41</td>
+    </tr>
+    <tr>
+      <td><strong>Sensitivity</strong></td>
+      <td>82.1%</td>
+      <td>89.3%</td>
+    </tr>
+    <tr>
+      <td><strong>Specificity</strong></td>
+      <td>80.4%</td>
+      <td>80.8%</td>
+    </tr>
+    <tr>
+      <td><strong>Accuracy</strong></td>
+      <td>80.9%</td>
+      <td>83.2%</td>
+    </tr>
+  </table>
+
+  <h3>Cross-Validation (3-Fold)</h3>
+  <table>
+    <tr>
+      <th>Metric</th>
+      <th>Mean &plusmn; Std</th>
+    </tr>
+    <tr>
+      <td>MAE</td>
+      <td>13.7 &plusmn; 0.9 g/L</td>
+    </tr>
+    <tr>
+      <td>Sensitivity</td>
+      <td>82.1% &plusmn; 7.2%</td>
+    </tr>
+    <tr>
+      <td>Specificity</td>
+      <td>82.5% &plusmn; 3.9%</td>
+    </tr>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">13. Configuration &amp; Tuning Reference</h2>
+
+  <p>All runtime parameters can be overridden via <strong>environment variables</strong> without changing code:</p>
+
+  <h3>Core Inference</h3>
+  <table>
+    <tr>
+      <th>Env Variable</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><code>HB_BIAS_OFFSET</code></td>
+      <td>0.0</td>
+      <td>Manual g/dL offset added to every prediction</td>
+    </tr>
+    <tr>
+      <td><code>HB_SCAN_INTERVAL</code></td>
+      <td>0.8</td>
+      <td>Seconds between Hb inference runs</td>
+    </tr>
+    <tr>
+      <td><code>HB_SMOOTHING_ALPHA</code></td>
+      <td>0.10</td>
+      <td>EMA weight for display smoothing</td>
+    </tr>
+    <tr>
+      <td><code>HB_MAX_HB_STEP_UP</code></td>
+      <td>0.05</td>
+      <td>Max g/dL increase per update</td>
+    </tr>
+    <tr>
+      <td><code>HB_MAX_HB_STEP_DOWN</code></td>
+      <td>0.18</td>
+      <td>Max g/dL decrease per update</td>
+    </tr>
+    <tr>
+      <td><code>HB_DEADBAND</code></td>
+      <td>0.10</td>
+      <td>Minimum change before display updates</td>
+    </tr>
+    <tr>
+      <td><code>HB_HISTORY_SIZE</code></td>
+      <td>15</td>
+      <td>Rolling window size for median filter</td>
+    </tr>
+  </table>
+
+  <h3>Session Timing</h3>
+  <table>
+    <tr>
+      <th>Env Variable</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td><code>PREP_DURATION</code></td>
+      <td>10.0</td>
+      <td>Positioning phase minimum duration (seconds)</td>
+    </tr>
+    <tr>
+      <td><code>HB_ACQUIRE_DURATION</code></td>
+      <td>16.0</td>
+      <td>Acquisition phase duration (seconds)</td>
+    </tr>
+    <tr>
+      <td><code>HB_MIN_VALID_SAMPLES</code></td>
+      <td>6</td>
+      <td>Minimum samples required for a valid result</td>
+    </tr>
+  </table>
+
+  <h3>Confidence Thresholds</h3>
+  <table>
+    <tr>
+      <th>Env Variable</th>
+      <th>Default</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td><code>HB_LIVE_NAIL_CONF</code></td>
+      <td>0.15</td>
+      <td>Minimum YOLO confidence to draw a bounding box</td>
+    </tr>
+    <tr>
+      <td><code>HB_SESSION_NAIL_CONF</code></td>
+      <td>0.18</td>
+      <td>Minimum confidence for positioning quality check</td>
+    </tr>
+    <tr>
+      <td><code>HB_ACQUIRE_NAIL_CONF</code></td>
+      <td>0.34</td>
+      <td>Minimum confidence to accept an Hb sample</td>
+    </tr>
+  </table>
+
+  <h3>Camera</h3>
+  <table>
+    <tr>
+      <th>Env Variable</th>
+      <th>Default</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td><code>CAMERA_FRAME_WIDTH</code></td>
+      <td>640</td>
+      <td>Capture width in pixels</td>
+    </tr>
+    <tr>
+      <td><code>CAMERA_FRAME_HEIGHT</code></td>
+      <td>480</td>
+      <td>Capture height in pixels</td>
+    </tr>
+    <tr>
+      <td><code>LENS_POSITION</code></td>
+      <td>8.0</td>
+      <td>Manual focus position (dioptres, 1/metres)</td>
+    </tr>
+  </table>
+
+  <h3>Calibration Toggles</h3>
+  <table>
+    <tr>
+      <th>Env Variable</th>
+      <th>Default</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td><code>HB_USE_SKIN_FEATURE_NORM</code></td>
+      <td>True</td>
+      <td>Use z-normalisation on skin features</td>
+    </tr>
+    <tr>
+      <td><code>HB_USE_CONFIG_CALIBRATION</code></td>
+      <td>False</td>
+      <td>Apply slope/intercept from config JSON</td>
+    </tr>
+    <tr>
+      <td><code>HB_USE_LEGACY_CALIBRATION_CURVE</code></td>
+      <td>False</td>
+      <td>Apply piecewise linear calibration curve</td>
+    </tr>
+    <tr>
+      <td><code>HB_ANEMIA_THRESHOLD_GDL</code></td>
+      <td>12.20</td>
+      <td>Decision threshold in g/dL</td>
+    </tr>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <h2 class="page-break">14. Starting the System</h2>
+
+  <h3>On the Raspberry Pi</h3>
+  <pre><code>cd /path/to/oneModel
+python app2.py</code></pre>
+  <p>The Flask server starts on <code>http://0.0.0.0:5000</code>. On the Pi's display, Chromium should open in kiosk
+    mode pointing to <code>http://localhost:5000</code>.</p>
+
+  <h3>Typical Boot Sequence Console Output</h3>
+  <pre><code>load models
+loaded hb config: /path/to/hb_regressor_config.json
+runtime hb config | skin_norm=True | cfg_cal=False (slope=0.7000,
+    intercept=20.00) | legacy_curve=False | anemia_threshold=12.20
+models loaded
+camera initialized (Picamera2, Camera Module 3, size=640x480)
+autofocus: Continuous + Fast (Camera Module 3)
+ * Running on http://0.0.0.0:5000</code></pre>
+
+  <h3>Complete System Data Flow (End to End)</h3>
+
+  <div class="flow">
+    <div class="flow-node start">&#128247; Camera Module 3 (640&times;480)</div>
+    <div class="flow-arrow"><span class="label">raw frame</span></div>
+    <div class="flow-node">&#128270; <strong>YOLO Nail Detector</strong> (best.pt, 416px)</div>
+    <div class="flow-arrow"><span class="label">nail bounding box</span></div>
+    <div class="flow-node">&#9986; Crop <strong>Nail</strong> (224&times;224) + <strong>Skin Patch</strong>
+      (96&times;96)</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-branch">
+      <div class="flow-branch-col">
+        <div class="flow-branch-label">&#127912; Image</div>
+        <div class="flow-node narrow">Resize, RGB,<br>ImageNet Normalize</div>
+      </div>
+      <div class="flow-branch-divider"></div>
+      <div class="flow-branch-col">
+        <div class="flow-branch-label">&#129514; Colour</div>
+        <div class="flow-node narrow">Lab means &rarr; 6 values<br>z-normalise</div>
+      </div>
+    </div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node accent">&#128260; <strong>TTA &times; 5</strong> shifted crops</div>
+    <div class="flow-arrow"><span class="label">5 predictions &rarr; median</span></div>
+    <div class="flow-node">&#10135; &divide; 10 &rarr; g/dL + <strong>Slope Correction</strong></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node">&lsim; EMA Smoothing + History Buffer</div>
+    <div class="flow-arrow"><span class="label">session samples</span></div>
+    <div class="flow-node accent">&#128200; <strong>Session Aggregation</strong><br><small>IQR filter &rarr; Median
+        &rarr; Anemia Guard</small></div>
+    <div class="flow-arrow"><span class="label">final Hb</span></div>
+    <div class="flow-node green">&#127991; <strong>Classification</strong><br><small>Normal / Borderline / Mild /
+        Moderate / Severe</small></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-branch">
+      <div class="flow-branch-col">
+        <div class="flow-node narrow green">&#128241; 5-inch Display</div>
+      </div>
+      <div class="flow-branch-divider"></div>
+      <div class="flow-branch-col">
+        <div class="flow-node narrow">&#128274; SQLite DB<br><small>(encrypted names)</small></div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  <p style="text-align: center; color: var(--text-secondary); font-size: 9pt; margin-top: 30px;">
+    AneDet System Walkthrough &mdash; Created April 2026<br>
+    Caparas &bull; Dionisio &bull; Salvacion &bull; Sulit
+  </p>
+
+  <!-- Floating TOC Button and Modal -->
+  <button id="tocBtn" title="Table of Contents">☰</button>
+  <div id="tocModal">
+    <h3>Walkthrough Sections</h3>
+    <div id="tocList"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const btn = document.getElementById("tocBtn");
+      const modal = document.getElementById("tocModal");
+      const tocList = document.getElementById("tocList");
+
+      // Generate unique IDs for all h2 and h3 elements and create TOC links
+      let idCounter = 0;
+      const headers = document.querySelectorAll("h2, h3");
+      
+      if (headers.length > 0) {
+        headers.forEach(header => {
+          if (!header.id) {
+            header.id = "section-" + idCounter++;
+          }
+          
+          const link = document.createElement("a");
+          link.href = "#" + header.id;
+          link.className = "toc-item";
+          link.innerText = header.innerText;
+          
+          // Indent h3 elements slightly
+          if (header.tagName.toLowerCase() === "h3") {
+            link.style.paddingLeft = "24px";
+            link.style.fontSize = "9.5pt";
+            link.style.color = "var(--text-secondary)";
+            
+            // Hover effect for h3 needs to be applied differently
+            link.addEventListener("mouseenter", () => { link.style.paddingLeft = "30px"; });
+            link.addEventListener("mouseleave", () => { link.style.paddingLeft = "24px"; });
+          } else {
+            link.style.fontWeight = "600";
+            link.style.color = "var(--text)";
+            link.style.marginTop = "12px";
+          }
+          
+          // Close modal on link click
+          link.addEventListener("click", () => {
+            modal.classList.remove("show");
+          });
+          
+          tocList.appendChild(link);
+        });
+      }
+
+      // Toggle modal
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        modal.classList.toggle("show");
+      });
+      
+      // Close modal when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!modal.contains(e.target) && e.target !== btn) {
+          modal.classList.remove("show");
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
