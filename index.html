@@ -702,11 +702,16 @@
       z-index: 999;
       /* ALWAYS show scrollbar so it acts as a constant interactive guide */
       overflow-y: scroll;
+      -webkit-overflow-scrolling: touch; /* Fast scroll on iOS */
+      scrollbar-width: auto; /* Standard cross-browser */
+      scrollbar-color: rgba(79, 70, 229, 0.6) rgba(0, 0, 0, 0.05);
     }
     
     /* Scrollbar Guide for TOC Modal */
     #tocModal::-webkit-scrollbar {
-      width: 10px; /* Wider scrollbar to be easily clickable */
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px; /* Wider scrollbar to be easily clickable */
     }
     #tocModal::-webkit-scrollbar-track {
       background: rgba(0, 0, 0, 0.05); /* Darker track so the boundary is visible */
