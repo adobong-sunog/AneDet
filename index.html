@@ -685,12 +685,15 @@
       right: 30px;
       width: 340px;
       max-height: 70vh;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(40px) saturate(160%);
+      -webkit-backdrop-filter: blur(40px) saturate(160%);
       border-radius: var(--radius);
-      box-shadow: var(--shadow-lg);
-      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15),
+                  inset 0 1px 3px rgba(255, 255, 255, 0.9),
+                  inset 0 -1px 2px rgba(0, 0, 0, 0.05),
+                  inset 1px 0px 2px rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.8);
       padding: 24px 10px 24px 24px; /* Reduced right padding to fit wide scrollbar nicely */
       opacity: 0;
       pointer-events: none;
