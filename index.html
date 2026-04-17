@@ -14,19 +14,22 @@
       --accent: #f59e0b;
       --green: #10b981;
       --red: #ef4444;
-      --text: #111827;
-      --text-secondary: #4b5563;
-      --border: #e5e7eb;
+      --text: #1e293b;
+      --text-secondary: #475569;
+      --border: rgba(255, 255, 255, 0.4);
       --bg: #f3f4f6;
-      --bg-code: #ffffff;
-      --bg-note: #e0e7ff;
-      --bg-tip: #d1fae5;
-      --bg-important: #fef3c7;
-      --bg-caution: #fee2e2;
+      --bg-code: rgba(255, 255, 255, 0.4);
+      --bg-note: rgba(224, 231, 255, 0.5);
+      --bg-tip: rgba(209, 250, 229, 0.5);
+      --bg-important: rgba(254, 243, 199, 0.5);
+      --bg-caution: rgba(254, 226, 226, 0.5);
       --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
       --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
       --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
       --radius: 12px;
+      /* Glass Constants */
+      --glass-bg: rgba(255, 255, 255, 0.45);
+      --glass-gloss: rgba(255, 255, 255, 0.9);
     }
 
     * {
@@ -37,7 +40,16 @@
 
     html {
       scroll-behavior: smooth;
-      background: var(--bg);
+      background-color: #f1f5f9;
+      background-image: 
+        radial-gradient(at 10% 20%, rgba(199, 210, 254, 0.8) 0px, transparent 50%),
+        radial-gradient(at 80% 0%, rgba(167, 243, 208, 0.8) 0px, transparent 50%),
+        radial-gradient(at 0% 50%, rgba(253, 230, 138, 0.8) 0px, transparent 50%),
+        radial-gradient(at 80% 50%, rgba(254, 202, 202, 0.8) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(191, 219, 254, 0.8) 0px, transparent 50%),
+        radial-gradient(at 80% 100%, rgba(221, 214, 254, 0.8) 0px, transparent 50%);
+      background-attachment: fixed;
+      background-size: cover;
     }
 
     body {
@@ -45,13 +57,26 @@
       font-size: 11.5pt;
       line-height: 1.8;
       color: var(--text);
-      background: #ffffff;
       max-width: 920px;
       margin: 40px auto;
       padding: 60px 80px;
       border-radius: 20px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06);
-      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1), inset 0 1px 1px var(--glass-gloss);
+      border: 1px solid var(--border);
+      position: relative;
+      z-index: 1; /* Establishes stacking context without breaking position: fixed */
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      /* Massive Glass UI moved to Pseudo-element */
+      background: var(--glass-bg);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border-radius: 20px;
+      z-index: -1;
     }
 
     @media print {
@@ -195,10 +220,11 @@
       border-radius: var(--radius);
       overflow: hidden;
       border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.25);
     }
 
     th {
-      background: #f8fafc;
+      background: rgba(255, 255, 255, 0.6);
       color: var(--text-secondary);
       font-weight: 600;
       text-align: left;
@@ -213,7 +239,7 @@
       padding: 14px 16px;
       border-bottom: 1px solid var(--border);
       vertical-align: top;
-      background: #ffffff;
+      background: transparent;
       color: var(--text);
     }
 
@@ -222,7 +248,7 @@
     }
 
     tr:hover td {
-      background: #f8fafc;
+      background: rgba(255, 255, 255, 0.45);
     }
 
     .callout {
@@ -232,6 +258,9 @@
       border-left: 5px solid;
       font-size: 10.5pt;
       line-height: 1.6;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(8px);
+      box-shadow: inset 0 1px 1px var(--glass-gloss);
     }
 
     .callout-title {
@@ -756,12 +785,89 @@
       padding-left: 16px;
     }
 
+    /* === SPA Layout CSS === */
+    .section-container {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+    .section-container.active {
+      display: block;
+    }
+
+    #homepage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+      margin-bottom: 40px;
+    }
+    .home-card {
+      background: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm), inset 0 1px 2px var(--glass-gloss);
+      transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s, background 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .home-card:hover {
+      background: rgba(255, 255, 255, 0.65);
+      box-shadow: var(--shadow-lg), inset 0 1px 2px var(--glass-gloss);
+      transform: translateY(-3px);
+      border-color: var(--primary);
+    }
+    .home-card h3 {
+      margin-top: 0;
+      color: var(--primary);
+      font-size: 13pt;
+      margin-bottom: 0;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .back-to-home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 30px;
+      transition: background 0.2s, transform 0.1s;
+      font-size: 10.5pt;
+    }
+    .back-to-home-btn:hover {
+      background: #c7d2fe;
+      transform: translateX(-2px);
+    }
+
     /* Mobile Responsive Hooks */
     @media (max-width: 768px) {
       body {
-        padding: 24px 22px;
-        font-size: 13pt; /* Larger base font for readability */
+        margin: 15px 12px;
+        padding: 24px 20px;
+        font-size: 12.5pt; /* Scaled for readability without wrapping issues */
         line-height: 1.6;
+        border-radius: 16px;
+      }
+      body::before {
+        border-radius: 16px;
+      }
+      #homepage-grid {
+        grid-template-columns: 1fr; /* Force single column on phones */
+        gap: 16px;
+        margin-top: 20px;
       }
       h1 {
         font-size: 24pt;
@@ -2302,56 +2408,173 @@ autofocus: Continuous + Fast (Camera Module 3)
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      // 1. SPA DOM Chunking Logic
+      const body = document.body;
+      const allElements = Array.from(body.children);
+      
+      const subtitle = document.querySelector('.subtitle');
+      const startIndex = allElements.indexOf(subtitle) + 1;
+      const contentElements = allElements.slice(startIndex, allElements.length - 2); 
+
+      const homepage = document.createElement('div');
+      homepage.id = 'homepage-grid';
+      
+      const sections = [];
+      let currentSection = null;
+      let sectionIndex = 0;
+
+      contentElements.forEach(el => {
+        if (el.tagName === 'H2') {
+          if (currentSection) {
+            body.appendChild(currentSection.div);
+          }
+          currentSection = {
+            id: 'section-' + sectionIndex++,
+            title: el.innerText,
+            div: document.createElement('div')
+          };
+          currentSection.div.className = 'section-container';
+          currentSection.div.id = currentSection.id;
+          
+          const card = document.createElement('div');
+          card.className = 'home-card';
+          const cardTitle = document.createElement('h3');
+          cardTitle.innerText = currentSection.title;
+          card.appendChild(cardTitle);
+          homepage.appendChild(card);
+          sections.push({ ...currentSection, card });
+          
+          currentSection.div.appendChild(el);
+        } else if (currentSection && el.tagName !== 'SCRIPT' && el.id !== 'tocBtn' && el.id !== 'tocModal') {
+          currentSection.div.appendChild(el);
+        } else if (!currentSection && el.tagName !== 'SCRIPT') {
+          // Remove orphan elements before the first H2 (like the old static TOC block)
+          el.remove();
+        }
+      });
+      
+      if (currentSection) {
+        body.appendChild(currentSection.div);
+      }
+      
+      subtitle.after(homepage);
+
+      // 2. Interactive Navigation State
       const btn = document.getElementById("tocBtn");
       const modal = document.getElementById("tocModal");
       const tocList = document.getElementById("tocList");
+      const modalTitle = modal.querySelector("h3");
+      let activeSectionId = null;
 
-      // Generate unique IDs for all h2 and h3 elements and create TOC links
-      let idCounter = 0;
-      const headers = document.querySelectorAll("h2, h3");
-      
-      if (headers.length > 0) {
-        headers.forEach(header => {
-          if (!header.id) {
-            header.id = "section-" + idCounter++;
-          }
-          
-          const link = document.createElement("a");
-          link.href = "#" + header.id;
-          link.className = "toc-item";
-          link.innerText = header.innerText;
-          
-          // Indent h3 elements slightly
-          if (header.tagName.toLowerCase() === "h3") {
-            link.style.paddingLeft = "24px";
-            link.style.fontSize = "9.5pt";
-            link.style.color = "var(--text-secondary)";
-            
-            // Hover effect for h3 needs to be applied differently
-            link.addEventListener("mouseenter", () => { link.style.paddingLeft = "30px"; });
-            link.addEventListener("mouseleave", () => { link.style.paddingLeft = "24px"; });
-          } else {
+      function renderModal(isHome) {
+        tocList.innerHTML = "";
+        if (isHome) {
+          modalTitle.innerText = "Walkthrough Sections";
+          sections.forEach(sec => {
+            const link = document.createElement("a");
+            link.href = "#";
+            link.className = "toc-item";
+            link.innerText = sec.title;
             link.style.fontWeight = "600";
-            link.style.color = "var(--text)";
-            link.style.marginTop = "12px";
-          }
-          
-          // Close modal on link click
-          link.addEventListener("click", () => {
-            modal.classList.remove("show");
+            link.style.marginTop = "8px";
+            link.addEventListener("click", (e) => {
+              e.preventDefault();
+              openSection(sec.id);
+              modal.classList.remove("show");
+            });
+            tocList.appendChild(link);
           });
+        } else {
+          modalTitle.innerText = "Section Contents";
           
-          tocList.appendChild(link);
-        });
+          const backLink = document.createElement("a");
+          backLink.href = "#";
+          backLink.className = "toc-item";
+          backLink.innerHTML = "🏠 <strong>Return to Homepage</strong>";
+          backLink.style.marginBottom = "15px";
+          backLink.style.borderBottom = "1px solid var(--border)";
+          backLink.style.paddingBottom = "15px";
+          backLink.style.color = "var(--primary)";
+          backLink.addEventListener("click", (e) => {
+             e.preventDefault();
+             openHomepage();
+             modal.classList.remove("show");
+          });
+          tocList.appendChild(backLink);
+
+          // List h3s inside the active section
+          const activeSec = document.getElementById(activeSectionId);
+          if (activeSec) {
+            const h3s = activeSec.querySelectorAll("h3");
+            
+            // If no subsections exist, tell user
+            if(h3s.length === 0) {
+                const noLink = document.createElement("span");
+                noLink.innerHTML = "<i>No sub-sections available.</i>";
+                noLink.style.fontSize = "9.5pt";
+                noLink.style.color = "var(--text-secondary)";
+                noLink.style.display = "block";
+                noLink.style.padding = "10px";
+                tocList.appendChild(noLink);
+            } else {
+                let h3Count = 0;
+                h3s.forEach(h3 => {
+                  if (!h3.id) h3.id = activeSectionId + "-h3-" + (h3Count++);
+                  const link = document.createElement("a");
+                  link.href = "#" + h3.id;
+                  link.className = "toc-item";
+                  link.innerText = h3.innerText;
+                  link.style.paddingLeft = "20px";
+                  link.style.fontSize = "10pt";
+                  link.addEventListener("mouseenter", () => { link.style.paddingLeft = "26px"; });
+                  link.addEventListener("mouseleave", () => { link.style.paddingLeft = "20px"; });
+                  link.addEventListener("click", () => { modal.classList.remove("show"); });
+                  tocList.appendChild(link);
+                });
+            }
+          }
+        }
       }
 
-      // Toggle modal
+      function openSection(id) {
+        homepage.style.display = "none";
+        sections.forEach(sec => {
+          if(sec.id === id) sec.div.classList.add("active");
+          else sec.div.classList.remove("active");
+        });
+        activeSectionId = id;
+        btn.innerHTML = "≡"; 
+        window.scrollTo(0,0);
+        renderModal(false);
+      }
+
+      function openHomepage() {
+        sections.forEach(sec => sec.div.classList.remove("active"));
+        homepage.style.display = "grid";
+        activeSectionId = null;
+        btn.innerHTML = "☰"; 
+        window.scrollTo(0,0);
+        renderModal(true);
+      }
+
+      // Attach clicks to Homepage Cards and generate Back buttons for each section
+      sections.forEach(sec => {
+        sec.card.addEventListener("click", () => openSection(sec.id));
+        
+        const backBtn = document.createElement("button");
+        backBtn.className = "back-to-home-btn";
+        backBtn.innerHTML = "← Back to Homepage";
+        backBtn.addEventListener("click", openHomepage);
+        sec.div.insertBefore(backBtn, sec.div.firstChild);
+      });
+
+      // Default Initialization
+      openHomepage();
+
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
         modal.classList.toggle("show");
       });
-      
-      // Close modal when clicking outside
       document.addEventListener("click", (e) => {
         if (!modal.contains(e.target) && e.target !== btn) {
           modal.classList.remove("show");
