@@ -939,6 +939,11 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 12px rgba(79, 70, 229, 0.1);
     }
+    
+    /* Desktop default: hide the mobile swipe hint */
+    .table-swipe-hint {
+      display: none;
+    }
 
     /* Mobile Responsive Hooks */
     @media (max-width: 768px) {
@@ -961,6 +966,27 @@
         display: block;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+      }
+      .table-swipe-hint {
+        display: flex;
+        align-items: center;
+        font-size: 9.5pt;
+        color: var(--primary);
+        margin-bottom: 8px;
+        font-weight: 600;
+        opacity: 0.9;
+        margin-top: -6px; /* slightly pull up toward previous text */
+      }
+      .table-swipe-hint::before {
+        content: "⟷";
+        font-size: 14pt;
+        margin-right: 6px;
+        line-height: 1;
+        animation: swipe-hint 2.5s infinite ease-in-out;
+      }
+      @keyframes swipe-hint {
+        0%, 100% { transform: translateX(0); }
+        50% { transform: translateX(6px); }
       }
       th, td {
         white-space: normal;
@@ -2676,6 +2702,14 @@ autofocus: Continuous + Fast (Camera Module 3)
 
       // Default Initialization
       openHomepage();
+
+      // Add animated mobile scroll indicator above every table
+      document.querySelectorAll('table').forEach(table => {
+        const hint = document.createElement('div');
+        hint.className = 'table-swipe-hint';
+        hint.innerHTML = 'Swipe table to view columns';
+        table.parentNode.insertBefore(hint, table);
+      });
 
       // Wire up the legacy static TOC inside the first section
       const staticTocList = document.querySelector('.toc ol');
