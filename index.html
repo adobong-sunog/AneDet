@@ -87,6 +87,10 @@
         max-width: none;
       }
 
+      .github-repo-btn {
+        display: none;
+      }
+
       .page-break {
         page-break-before: always;
       }
@@ -122,6 +126,42 @@
       line-height: 1.6;
       border-bottom: 2px solid var(--border);
       padding-bottom: 24px;
+    }
+
+    .github-repo-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(15, 23, 42, 0.14);
+      color: #0f172a;
+      text-decoration: none;
+      font-size: 10pt;
+      font-weight: 700;
+      box-shadow: var(--shadow-sm), inset 0 1px 1px var(--glass-gloss);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .github-repo-btn img {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .github-repo-btn:hover {
+      background: rgba(255, 255, 255, 0.95);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md), inset 0 1px 1px var(--glass-gloss);
+    }
+
+    .github-repo-btn:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
     }
 
     h2 {
@@ -1031,6 +1071,9 @@
         gap: 16px;
         margin-top: 20px;
       }
+      .github-repo-btn {
+        margin-top: 12px;
+      }
       .table-swipe-hint {
         display: flex;
         align-items: center;
@@ -1128,7 +1171,21 @@
 <body>
 
   <h1>AneDet System Walkthrough</h1>
-  <p class="subtitle">A complete guide to how the non-invasive anemia detection system works.</p>
+  <p class="subtitle">
+    A complete guide to how the non-invasive anemia detection system works.
+    <br>
+    <a
+      class="github-repo-btn"
+      href="https://github.com/adobong-sunog/AneDet"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Open AneDet repository on GitHub"
+      title="Open GitHub repository"
+    >
+      <img src="static/github-icon.svg" alt="GitHub icon">
+      <span>View on GitHub</span>
+    </a>
+  </p>
 
   <!-- ═══════════════════════════════════════════════════════════════════ -->
   <h2>System in Simple Terms</h2>

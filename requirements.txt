@@ -1,0 +1,12 @@
+# Core web app and ML inference dependencies
+Flask>=2.3
+numpy>=1.24
+opencv-python>=4.8
+onnxruntime>=1.16
+ultralytics>=8.0
+mediapipe>=0.10
+
+# Raspberry Pi camera support (used by app.py / pi_inference.py)
+# If installation fails on Raspberry Pi OS, install with:
+# sudo apt install python3-picamera2
+picamera2>=0.3; platform_system == "Linux" and (platform_machine == "aarch64" or platform_machine == "armv7l")
