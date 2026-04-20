@@ -1,7 +1,7 @@
 # AneDet
 > Complete technical documentation can be found [here](https://adobong-sunog.github.io/AneDet/).
 
-A web application for our Capstone Project that uses CNN and XGBoost hybrid models for detection of Anemia in adults through hemoglobin prediction using fingernail image.
+A web application for our Capstone Project that uses YOLOv8 for nail and skin detection, as well as CNN for detection of Anemia in adults through hemoglobin prediction using fingernail image.
 
 ## Interface 
 ![Interface](static/Screenshot%202026-04-14%20162002.png)
